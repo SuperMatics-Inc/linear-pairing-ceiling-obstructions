@@ -1,145 +1,159 @@
-# BARRIERS2-PAPER: build record
+# BARRIERS2-V2: build record
 
-This record describes the final build, after the corrections listed in `FIX.md`
-(resolution of `REVIEW.md`, verdict `PASS-WITH-FIXES`). The reviewed text is kept as
-`main.v1.tex` and the reviewed claim map as `CLAIMS.v1.md`.
+This record describes the build shipped in this directory: the reviewed text
+(`main.v1.tex`), the post-review fixes (verdict of `REVIEW.md`:
+`PASS-WITH-FIXES`; findings applied per `FIX.md`, follow-up verdict in
+`REVIEW2.md`: `PASS-WITH-FIXES` with the single P2 typo `N1`), the Section 5
+generalisation installed from the reviewed `UNIFORM-SSH` record, and the delta-review
+fixes recorded in `FIX-V2.md` (delta review `REVIEW-V2.md`: `PASS-WITH-FIXES`).
+Snapshots kept alongside: `main.v1.tex` (reviewed by `REVIEW.md`), `main.v2.tex`
+(after the twelve fixes, reviewed by `REVIEW2.md`), `main.v3.tex` (after the Section 5
+generalisation, before the delta-review fixes), and `CLAIMS.v2.md`/`BUILD.v2.md` (the
+claim map and this record before the delta-review fixes).
 
 ## Toolchain
 
-- TeX engine: Tectonic 0.17.0 at `D:/dev/tools/tectonic/tectonic.exe`
-  (single binary, fetches and pins its own bundle, runs BibTeX itself).
-- Document class `article`, 11pt, `geometry` 1in margins, `amsmath`/`amssymb`/
-  `amsthm`/`mathtools`, `hyperref`, `microtype`, `enumitem`, `array`.
-- Bibliography: `plain` style over the local `refs.bib` (7 entries, all cited).
+- TeX engine: Tectonic 0.17.0 at `D:/dev/tools/tectonic/tectonic.exe` (single binary,
+  fetches and pins its own bundle, runs BibTeX itself).
+- Document class `article`, 11pt, `geometry` 1in margins,
+  `amsmath`/`amssymb`/`amsthm`/`mathtools`, `hyperref`, `microtype`, `enumitem`,
+  `array`.
+- Bibliography: `plain` style over the local `refs.bib` (10 entries, all cited;
+  matching `main.bbl`).
 
 ## Build command
 
 ```
-cd D:/dev/scratch/ceiling-20261118/MASSIVE/BARRIERS2-PAPER
+cd D:/dev/scratch/ceiling-20261118/MASSIVE/BARRIERS2-V2
 D:/dev/tools/tectonic/tectonic.exe --keep-logs main.tex
 ```
 
-`--keep-logs` keeps `main.log`; add `--keep-intermediates` to keep `main.aux`,
-`main.bbl` and `main.blg` as well. Exit status of the recorded build: `0`
-(wall time 1.6 s).
+A single invocation suffices: the engine runs TeX, BibTeX and TeX twice more, then
+writes the PDF.
 
-Recorded artifacts:
+## Build result
 
-| file | bytes | sha256 / notes |
+- `main.pdf`: 21 pages, 230,895 bytes.
+- Overfull boxes: 0. Underfull boxes: 0.
+- LaTeX warnings: 0. Package warnings: 0. Undefined references: 0. Undefined
+  citations: 0. Multiply-defined labels: 0.
+  (Counting command: `grep -c "Overfull\|Underfull\|LaTeX Warning\|Package Warning\|undefined\|Multiply defined" main.log`
+  returns 0. The strings `Overfull`/`Underfull`/`LaTeX Warning`/`Package Warning` do
+  not otherwise appear in `main.log`; the single line containing the word `warning` is
+  the `infwarerr` package banner, which is not a diagnostic.)
+- BibTeX: no warning in `main.blg`; all 10 database entries appear in `main.bbl`.
+
+## Acceptance checks (all run after the final build)
+
+| Check | Command | Observed |
 |---|---|---|
-| `main.pdf` | 197114 | 18 pages, 9343 words in the extracted text |
-| `main.tex` | 65075 | `dc183d15a0a8d6b1736cc02eeadafd6f3e62c522b77a8878daa61671a4d3f4b6` |
-| `refs.bib` | 1806 | `dfdf71b495806aff341f15aa0c5506db25428ec063f04054a1e43be89b7eb896`, 7 released-preprint entries |
-| `CLAIMS.md` | 18842 | `a8b36ca8d3c146b96097a5f56b55726919106b71a44794fa03ad22af9ae0a740` |
-| `FIX.md` | 8155 | `fd51a479d98622a5ff1e226a553110c2dcb63f64a8b9593e125bfd5f46eee677` |
-| `main.txt` | 52279 | extracted PDF text, used only for the checks below |
-| `main.v1.tex` | 60129 | reviewed text, `d7cc050845f1fd5a0603d6941f17ffbb1f6a3a7b8b49d2cca3c4ec5134d86a9a` |
-| `CLAIMS.v1.md` | 13695 | reviewed claim map, `dca28e6cfa6a4c4e799242cbc1e73e570d04bb84bfb3a87f65273ed05e7fb562` |
-| `REVIEW.md` | 18548 | untouched, `5576014f1f459c7e38edc2c4faad2b9c3e22078977bff931de0161ab12a78b5c` |
+| Text extraction | `pypdf` on `main.pdf`, output kept as `main.txt` | 21 pages, 61,918 characters, 10,966 words |
+| Em dash | count of U+2014 in `main.txt` | 0 |
+| En dash | count of U+2013 in `main.txt` | 5, all inside publisher page and issue ranges in the bibliography (`118(5–6):973–978`, `95(3–4):693–717`, `4(2):511–522`); neither the issue ranges nor the page ranges were changed, see `FIX-V2.md` on the rejected finding |
+| Double hyphen | count of `--` in `main.txt` | 0 |
+| Unresolved references in the rendered text | count of `??` in `main.txt` | 0 |
+| Required sentence | substring search for `This preprint has not been peer reviewed.` | present |
+| Byline | substring search for author, affiliation, ORCID | present |
+| AI-assistance disclosure | substring search | present in "Acknowledgments and disclosures" |
+| Internal naming | word-bounded search for `lane`, `worker`, `omp`, `git`, machine names, absolute paths, `scratch`, source-record names, `pending review` | 0 hits; the word `agents` occurs only in the AI disclosure |
+| Digests | `sha256sum` over the deliverables | see below |
 
-The PDF is not byte-reproducible: Tectonic records a creation date and a document ID
-in every run, so two builds of the identical `main.tex` differ in their sha256 while
-agreeing in page count, byte size and extracted text (checked over two consecutive
-builds of the recorded source). Reproducibility is therefore recorded at the level of
-`main.tex` plus the artifact properties above, not as a PDF hash.
+## Digests (SHA-256)
 
-## Warnings
+```
+f45323746d156dfefd4a7d525beeb7bf7e06445a1a7e397db6fe1d4ef7172c2a  main.tex
+fc2154aa254e88e10df1aca0bcacd35cc24d94ff850339efa87e71248c3faa3c  main.pdf
+d555d2ec1c57c0cdada78e96400e900c33b52f92967d8f4e0c17fe56ac78a675  refs.bib
+b4818379c8f8092e89a380b5114f704639f67118175f28cc9ff37cc0271a7445  CLAIMS.md
+96bd60103d690909dc49b6bd9bb47165b3ed4fc78d5bcd15d4159bbdd04548f0  FIX.md
+910f931944aabb151f86c3e99b9de8971c9798fb85be8995e968be8403b1bf02  FIX-V2.md
+```
 
-Recorded build, `main.log` 14842 bytes:
+Pre-fix snapshots kept for traceability:
 
-- Overfull boxes: **0** (`grep -c "Overfull" main.log` gives 0).
-- Underfull boxes: **0** (`grep -c "Underfull" main.log` gives 0).
-- Lines containing `undefined`: **0**, so no undefined references, undefined
-  citations, multiply defined labels or missing bibliography entries.
-- `main.blg` is 185 bytes and carries no warning or error.
-- The `Fontconfig error: Cannot load default config file` line that the Tectonic
-  executable prints on this host is a font-cache message from the bundled
-  XeTeX/xdvipdfmx pipeline, not a document warning; it appears on every build here and
-  does not affect the output. It is the only diagnostic of the build.
+```
+ec5c2f79ab0a2465b307c8ba964258c37495bddba2c27e7d73b3a9ef3f0801ac  main.v3.tex
+9e7731ba531b04550ecf82d72d1a16e1a789eb53f110588948c7d3878859e381  CLAIMS.v2.md
+feb73e8e0a9942cd40993f9f402c1e399a6f1c89b51d1dbc6795734f7cd49299  BUILD.v2.md
+```
 
-## Verification checks run on the built PDF
+`main.v3.tex` is the text that `REVIEW-V2.md` checked; it no longer equals `main.tex`,
+whose current digest appears in the first block. `refs.bib` is byte-identical to the
+bytes the delta review checked, as recorded in `FIX-V2.md`.
 
-Text was extracted with `pypdf` over all 18 pages into `main.txt` (51034 text
-characters), then checked on the extracted text:
+## Source records behind the paper
 
-| check | result |
+| Record | Content used here |
 |---|---|
-| em dash `U+2014` | 0 occurrences |
-| en dash `U+2013` | 0 occurrences |
-| doubled hyphen `--` | 0 occurrences |
-| the word `lane` / `agent` / `worker` / `git` | 0 occurrences (the only hits for the letters `agent` are the two words inside the required AI-assistance disclosure) |
-| machine names, file paths, repository names | none (`C:/`, `D:/`, `scratch` all 0) |
-| `This preprint has not been peer reviewed.` (exact sentence) | present |
-| AI-assistance disclosure | present, verbatim as in the released BARRIERS note |
-| author byline `Davis Rens`, affiliation `SuperMatics Inc.`, ORCID `0000-0001-5839-5197` | present |
-| `??` (unresolved cross-reference) | 0 |
-| `T_pair`, `T_lin` used for model quantities only; no measured `T_c` and no materials claim | confirmed by reading |
+| `MASSIVE/STATIC-MODE/` | Section 3 (integrated first dynamic cumulant, three-site witness, torus embedding) |
+| `MASSIVE/LINEAR-FRESH/` | Section 4 (positive-determinant amplification, `f`-sum lemma, two-slice fixture, Ward and dimer remarks) |
+| `MASSIVE/UNIFORM-SSH/` | The `U_eff`-uniform half of Section 5 (Theorems 1.1-1.5), transcribed per `AMENDMENT.md` |
+| `ADIABATIC/PURESSH/` | The `U_eff = 0` route obstructions of Section 5 and the constants inherited by the uniform bounds |
 
-The first PDF-level review run of the same source family also confirmed that all 68
-labels resolve and that `main.tex` contains no draft-language string.
+External numerics are quoted only for bibliographic identification of cited
+classical results (oscillator sum rule, Ueltschi hopping expansions and their
+Holstein extension); no external data set is used.
 
-## Bibliography verification
+## Status of the reviews
 
-Every entry is a SuperMatics preprint released on Zenodo. Each DOI string and title
-was taken from a released record in this series and compared programmatically against
-it, not retyped from memory: `MASSIVE/CAPSTONE-PAPER/refs.bib` carries six of the
-seven entries, `ADIABATIC/BARRIERS-PAPER/refs.bib`,
-`ADIABATIC/LINEAR4-PAPER/refs.bib`, `ADIABATIC/LINEAR5-PAPER/refs.bib` and
-`ADIABATIC/SSHBOUND3-PAPER/refs.bib` corroborate the rest, and the `SSHBOUND3` entry
-itself comes from that paper's own `main.tex` (`\PAPERDOI` on line 10 and `\title` on
-line 13). No external reference was added, so no bibliography outside this
-series needed verification. The seven entries and their verified titles are:
-
-| key | DOI | title as in the released record |
-|---|---|---|
-| `barriers` | 10.5281/zenodo.24384373 | Determinant zeros and method-specific barriers to linear-in-frequency pairing bounds in the Holstein model |
-| `sshbound3` | 10.5281/zenodo.24406987 | An explicit pair bound for the attractive Hubbard model with bond SSH coupling |
-| `linear5` | 10.5281/zenodo.24374043 | Imaginary-time estimates and method barriers beyond the two-thirds adiabatic bound |
-| `limits` | 10.5281/zenodo.24385569 | Limits of defect-insertion bounds for slow-phonon pair order in the Holstein model |
-| `stage6` | 10.5281/zenodo.24380128 | Strong-coupling suppression of electronic pair order in the Holstein model, uniformly in phonon frequency and without a hopping cutoff |
-| `slow` | 10.5281/zenodo.24366508 | Suppression of electronic pair order for slow lattice phonons |
-| `linear4` | 10.5281/zenodo.24372238 | A two-thirds-power adiabatic bound for electronic pair order |
+- `REVIEW.md` (this directory): `PASS-WITH-FIXES`, 12 findings, all applied.
+- `REVIEW2.md` (this directory): `PASS-WITH-FIXES`, all 12 findings RESOLVED, one new
+  P2 typo `N1` (`value` for `derivative` in the proof summary of `thm:canon`),
+  applied.
+- `REVIEW-V2.md` (this directory): `PASS-WITH-FIXES` (0 P0, 1 P1, 1 P2, 3 P3); the
+  findings are closed in `FIX-V2.md`.
+- `MASSIVE/STATIC-MODE`, `MASSIVE/LINEAR-FRESH`: independent `PASS`.
+- `MASSIVE/UNIFORM-SSH`: `REVIEW.md` `PASS-WITH-FIXES`, `REVIEW2.md` `PASS`. The
+  transcription into this paper has not had a separate independent review of its own;
+  the reviewed statements are those of the source record, and `REVIEW-V2.md` checked
+  the transcription against them.
+- `ADIABATIC/PURESSH`: `REVIEW.md` `PASS`; `REVIEW2.md` (SHA-256
+  `25f1115df5b8ce4eb4a246b5a30439ec354d09968cbc8423dd6214fa56926bfe`)
+  `PASS-WITH-FIXES` with all six first-round findings resolved, and
+  `ADIABATIC/PURESSH/FIX.md` §4 closes its notes `N1`-`N4`. Every `PURESSH` item in
+  Section 5 is therefore PROVED on twice-reviewed source text; no provisional status
+  remains in `CLAIMS.md`.
 
 ## Source immutability
 
 No source record was modified. This directory contains the paper (`main.tex`), its
-bibliography, the built PDF, the extracted text used for the checks, the reviewed
-snapshots (`main.v1.tex`, `CLAIMS.v1.md`), the review (`REVIEW.md`) and the two
-companion records `CLAIMS.md` and `FIX.md`. The replay suite referenced by the
-paper's data-availability section is a separate deposit; it is not part of this
-directory.
+bibliography, the built PDF, the extracted text used by the checks (`main.txt`), the
+reviewed snapshots (`main.v1.tex`, `main.v2.tex`, `main.v3.tex`, `CLAIMS.v1.md`,
+`CLAIMS.v2.md`, `BUILD.v2.md`), the reviews (`REVIEW.md`, `REVIEW2.md`,
+`REVIEW-V2.md`), the fix records (`FIX.md`, `FIX-V2.md`), the claim map (`CLAIMS.md`)
+and this record. The replay suite referenced by the paper's data-availability section
+is a separate deposit; it is not part of this directory.
 
-## Release build, version 1.0.0
+## Release build, version 1.1.0
 
-The sections above record the build of the working record in
-`MASSIVE/BARRIERS2-PAPER`, whose reviewed source is archived there as `main.v1.tex`,
-`main.v2.tex` and `main.v3.tex`. The release copy in `paper/main.tex` differs from
-that source (`main.v3.tex`, SHA-256
-`acc237f1313d83d81f4b0fb12d930c15260be60dd9bf430958677aa8df1d875a`, 65080 bytes) in
-release metadata only, with no change to any mathematical statement, constant, proof
-or scope:
+The deposited manuscript is the reviewed text byte for byte: `paper/main.tex`
+(81,203 bytes, SHA-256
+`f45323746d156dfefd4a7d525beeb7bf7e06445a1a7e397db6fe1d4ef7172c2a`) is this
+directory's reviewed source, with no release-metadata edits, and `paper/refs.bib`
+(2,744 bytes, SHA-256
+`f3b576c5068a1779b91e632842c994dbf9d1cb2e038b67bb83aaa5ce6247f28c`) is the reviewed
+bibliography, whose page and issue ranges keep their en dashes (`693--717`,
+`511--522`, `973--978`, `3-4`, `5-6`). Only em dashes are excluded from the released
+text; en dashes in bibliographic page and issue ranges are reviewed typography and
+are kept.
 
-- three macro definitions after `\date{}`: `\PAPERDOI` = `10.5281/zenodo.24408871`,
-  `\SUPPDOI` = `10.5281/zenodo.24408875`, `\REPOURL` =
-  `https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions`;
-- a five-line centred block after `\maketitle` printing the article DOI, the
-  supplement DOI and the source-repository URL;
-- the data-availability paragraph now names the deposited supplement DOI, the
-  source-repository URL and the article DOI, replacing the sentence that announced
-  the supplement as a future deposit.
+The manuscript therefore carries no DOI and no repository URL. The version 2 DOIs,
+the version 1 DOIs, the supplement DOI and the source repository are recorded in the
+Zenodo record metadata, in `README.md` and in `CITATION.cff`, not in the deposited
+paper.
 
-The release build sets `SOURCE_DATE_EPOCH=1795132800` (2026-11-20T00:00:00Z) so that
-the hosted CI build and a local build reproduce the same bytes:
+The release build sets `SOURCE_DATE_EPOCH=1795132800` (2026-11-20T00:00:00Z):
 
 ```
 SOURCE_DATE_EPOCH=1795132800 D:/dev/tools/tectonic/tectonic.exe --keep-logs main.tex
 ```
 
-Exit status `0`, 18 pages, 201715 bytes, SHA-256
-`bbbf3bf89fa392ebd4bf3585e01f672e136f97a5b764492a485490a00f2f7a77`. Two consecutive
-builds of the same source under that epoch produced identical bytes. `main.log`
-reports 0 `Overfull`, 0 `Underfull` and 0 `undefined` lines, and `main.blg` carries
-no warning. The text, dash, disclosure, byline and internal-token checks of the
-section above were re-run on the release PDF and all pass; the PDF now also carries
-four URL annotations (the ORCID, both DOIs and the repository) with the supplement,
-repository and article DOIs repeated in the data-availability paragraph.
+Exit status `0`, 21 pages, 230892 bytes, SHA-256
+`98423ed3920cf826b4ab51972a95b46865cf6dbb672cde33858f325f1d0140de`. Two consecutive
+builds of these bytes under that epoch produced this same SHA-256. `main.log` reports
+0 `Overfull`, 0 `Underfull` and 0 `undefined` lines, and `main.blg` carries no
+warning. The text checks of the section above were re-run on this PDF and all pass:
+no em dash, the exact sentence "This preprint has not been peer reviewed.", the AI
+disclosure and the byline are present, and no internal lane, agent, machine or path
+token appears outside the disclosure. The only URL annotation in the PDF is the
+author ORCID.

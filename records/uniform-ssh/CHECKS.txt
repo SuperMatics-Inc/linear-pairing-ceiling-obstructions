@@ -1,0 +1,49 @@
+# UNIFORM-SSH Checks Receipt (`CHECKS.txt`)
+
+- Date: 20 November 2026 (post-fix against `REVIEW.md`, see `FIX.md`)
+- Status: `proof draft` reviewed `PASS-WITH-FIXES` (`REVIEW.md`); all findings `F1`–`F8` resolved (`FIX.md`).
+- Finite algebraic identities, operator norms, Schatten–Hölder tests, exact rational constants, outward-rounded interval bounds, and 2-site dimer non-monotonicity counterexamples are `CERTIFIED` by pure stdlib exact rational / outward-rounded rational-interval arithmetic in `replay.py`.
+- The $C_4$ canonical $N=4$ check and $U=8$ dimer continuation noted in `RIGOR.md` are `NUMERICAL`.
+- Infinite-dimensional functional analysis and thermodynamic canonical transfers are analytical (`proof draft`).
+
+Retained files:
+1. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/SCOPING.md`
+2. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/RIGOR.md`
+3. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/RESULT.md`
+4. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/replay.py`
+5. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/REVIEW.md` (untouched)
+6. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/FIX.md`
+7. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/AMENDMENT.md`
+8. `D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/CHECKS.txt`
+
+Exercised commands (post-final-edit):
+1. Main certification suite (exit 0, wall time 2.38s total with mutant run):
+   `python -B D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/replay.py`
+   Output:
+   ```
+   UNIFORM-SSH replay.py: ALL EXACT RATIONAL AND OUTWARD INTERVAL CHECKS PASSED
+     Universal (all U_eff): c0 = 2^-10, q_GC = 32/341, A_GC = 341/103, R_max = 24718511/9834543 < 3
+     Mott / SSHBOUND3 (c=5/4): L_t=1024, L_s=2048, q_GC = 48645/524224, A_GC = 1965840/475579, b_src = 6567075/6636364 < 1
+     Dilute canonical-ready (c=3/2): L_t=2048, L_s=4096, q_GC = 33795/524224, A_GC = 2359008/490429, b_src = 2737395/3585482 < 1
+     Dimer non-monotonicity: CERTIFIED chi_pair(4) > 25*chi_pair(0) (centered), |<d0^dag d1>|(4) > 4*|<d0^dag d1>|(0) (uncentered)
+     Mott edge: CERTIFIED (cosh(3)-1)/4 > 2; Atomic limit: CERTIFIED <d0^dag d1> = 0; C4 Full PH: CERTIFIED
+   ```
+
+2. Adversarial mutant suite (exit 0; all 8 mutants exited 1):
+   `python -B D:/dev/scratch/ceiling-20261118/MASSIVE/UNIFORM-SSH/replay.py --all-mutants`
+   Output:
+   ```
+     mutant norm_tb_underestimate              -> exit 1
+     mutant threshold_c0_doubled               -> exit 1
+     mutant exp_taylor_bound_dropped           -> exit 1
+     mutant mott_c_underestimated              -> exit 1
+     mutant dilute_L1024_source                -> exit 1
+     mutant dimer_monotonicity_claimed         -> exit 1
+     mutant uncentered_offdiag_monotone        -> exit 1
+     mutant mott_edge_assumed_small            -> exit 1
+   ALL 8 MATHEMATICAL MUTANTS REJECTED (each exited 1)
+   ```
+
+Skipped / out-of-scope checks:
+- LaTeX / PDF compilation, Lean formalization, repository-wide lint/tests/builds.
+- Temp files under `C:/t/UniformSSH` removed after verification.

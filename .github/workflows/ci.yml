@@ -68,15 +68,25 @@ jobs:
           grep -qF 'ALL 12 MATHEMATICAL MUTANTS REJECTED' mutants.out
           python -B ed_check.py | tee ed.out
           grep -qF 'ALL NUMERICAL ED CHECKS PASSED' ed.out
+      - name: Uniform ceiling in the Hubbard-Holstein-SSH model and its mutants
+        working-directory: records/uniform-ssh
+        run: |
+          set -euo pipefail
+          python -B replay.py | tee replay.out
+          grep -qF 'ALL EXACT RATIONAL AND OUTWARD INTERVAL CHECKS PASSED' replay.out
+          grep -qF 'b_src = 2737395/3585482 < 1' replay.out
+          grep -qF 'Dimer non-monotonicity: CERTIFIED' replay.out
+          python -B replay.py --all-mutants | tee mutants.out
+          grep -qF 'ALL 8 MATHEMATICAL MUTANTS REJECTED' mutants.out
       - name: Public prose safeguards
         run: |
           set -euo pipefail
-          if grep -nE '—|–|\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' paper/main.tex README.md; then exit 1; fi
+          # Only em dashes are banned. En dashes in bibliographic page and issue
+          # ranges are reviewed typography and are allowed.
+          if grep -nF '—' paper/main.tex README.md; then exit 1; fi
+          if grep -nE '\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' paper/main.tex README.md; then exit 1; fi
           grep -qF 'This preprint has not been peer reviewed.' paper/main.tex
           grep -qF 'This preprint has not been peer reviewed.' README.md
-          grep -qF '10.5281/zenodo.24408871' paper/main.tex
-          grep -qF '10.5281/zenodo.24408875' paper/main.tex
-          grep -qF 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions' paper/main.tex
   paper:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -99,11 +109,11 @@ jobs:
           if grep -nE 'Overfull|Underfull|Undefined|Citation.*undefined|There were undefined' main.log; then exit 1; fi
           test -s main.pdf
           pdfinfo -url main.pdf > urls.txt
-          grep -qF 'https://doi.org/10.5281/zenodo.24408871' urls.txt
-          grep -qF 'https://doi.org/10.5281/zenodo.24408875' urls.txt
-          grep -qF 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions' urls.txt
+          grep -qF 'https://orcid.org/0000-0001-5839-5197' urls.txt
           pdftotext main.pdf main.txt
-          if grep -nE '—|–|\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' main.txt; then exit 1; fi
+          # Only em dashes are banned; en dashes in bibliographic ranges are allowed.
+          if grep -nF '—' main.txt; then exit 1; fi
+          if grep -nE '\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' main.txt; then exit 1; fi
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'This preprint has not been peer reviewed.'
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'separate AI agents carried out the independent reviews.'
       - uses: actions/upload-artifact@v4
