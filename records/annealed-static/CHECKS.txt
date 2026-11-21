@@ -1,0 +1,60 @@
+# ANNEALED-STATIC Verification Log and Constant Receipts (20 Nov 2026)
+
+## 1. Exercised Commands and Exit Codes
+
+1. Primary replay (exact rationals, 128-bit `flint.arb` interval enclosures, finite-lattice buffer tests):
+   Command: `UV_OFFLINE=1 UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with python-flint python -B D:/dev/scratch/ceiling-20261118/MASSIVE/ANNEALED-STATIC/replay.py`
+   Exit code: `0`
+   Stdout:
+   ```
+   ALL ANNEALED-STATIC REPLAY CHECKS PASSED.
+   [rational] {'static_mode_raw': '1/1148', 'bracket_sum': '496/225', 'lead_coeff': '62/675', 'g_quarter_lead': '248/675', 'taylor_majorant': '12', 'combined_g_quarter': '8348/675', 'dimer_direct_n2_gap': '1/3'}
+   [arb_reflection] {'det_direct_2x2': '[-4593.0291530659661610604341728287152 +/- 1.14e-32]', 'det_dimer_ph_3x3': '[35.76887199956216591042958446551016 +/- 3.86e-33]', 'det_m1_c4': '[-203.854762735809940779543442390 +/- 3.92e-28]', 'det_m2_c4': '[-58763809479.5249913351181560211 +/- 3.11e-20]'}
+   [arb_resolvent] {'max_first_order': '0', 'max_ident_err': '0'}
+   [numerical_buffer] {'ax_res_1d': np.float64(0.7294768233577967), 'ax_buf_1d_x0': np.float64(1.0059673898764262e-05), 'ax_res_2d': np.float64(0.7252439227791312), 'ax_buf_2d': np.float64(4.5767668664602824e-09)}
+   ```
+
+2. Mutant guard suite (14 independent mutants, each run in an isolated subprocess):
+   Command: `UV_OFFLINE=1 UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with python-flint python -B D:/dev/scratch/ceiling-20261118/MASSIVE/ANNEALED-STATIC/replay.py --all-mutants`
+   Exit code: `0` (all 14 mutants exited with code `1` and were REJECTED)
+   Stdout:
+   ```
+   REJECTED flip_buffer_fraction_bound (exit 1)
+   REJECTED flip_combined_annealed_constant (exit 1)
+   REJECTED flip_bernoulli_radius_bound (exit 1)
+   REJECTED flip_taylor_majorization_constant (exit 1)
+   REJECTED flip_dimer_direct_taylor_gap (exit 1)
+   REJECTED flip_dimer_direct_2x2_sign (exit 1)
+   REJECTED flip_dimer_ph_3x3_sign (exit 1)
+   REJECTED flip_c4_ph_one_spin_sign (exit 1)
+   REJECTED flip_c4_ph_two_spin_sign (exit 1)
+   REJECTED flip_first_order_boundary_zero (exit 1)
+   REJECTED flip_two_step_resolvent_identity (exit 1)
+   REJECTED flip_neumann_boundary_bound (exit 1)
+   REJECTED flip_local_buffer_cumulant_bound (exit 1)
+   REJECTED flip_annealed_ray_limit_bound (exit 1)
+   ALL 14 MUTANTS REJECTED.
+   ```
+
+3. Independent verification (pure integer `(p, q)` rationals, $2^L$-state Fock-space traces, `mpmath.iv` interval arithmetic, and 96-node imaginary-time Gauss-Legendre quadrature):
+   Command: `UV_OFFLINE=1 UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with mpmath --with python-flint python -B D:/dev/scratch/ceiling-20261118/MASSIVE/ANNEALED-STATIC/independent.py`
+   Exit code: `0`
+   Stdout:
+   ```
+   ALL INDEPENDENT ANNEALED-STATIC CHECKS PASSED.
+   [integer_rationals] {'lead': '62/675', 'lead_g4': '248/675', 'combined': '8348/675', 'gap': '1/3'}
+   [fock_and_interval_minors] {'det_direct_fock': '-4593.029153065966161060434', 'det_dimer_ph': '35.76887199956216591042958', 'det_m1_c4': '-203.8547627358099407795434', 'det_m2_c4': '-58763809479.52499133511816'}
+   [time_domain_cross_check] {'ax_td_res': np.float64(0.7294768233501329), 'ax_td_buf': np.float64(1.0059674713857325e-05), 'diff_res': np.float64(7.663869538987456e-12), 'diff_buf': np.float64(8.150930627605531e-13)}
+   ```
+
+4. Temporary directory cleanup:
+   Command: `rm -rf C:/t/AnnealedStatic && test ! -e C:/t/AnnealedStatic`
+   Exit code: `0`
+
+## 2. Deliverable SHA-256 Digests
+
+- `fc70399e5bbb38dc14156ff9614f42cf6282c08f23ce78220d9bc487e3359f57`  `SCOPING.md`
+- `6e1b40c1329b5030c7fba9c4b2c3ad2eadbc86d38e5d6661f3e7684565e16187`  `PROOF.md`
+- `4d66a16b1a553fa41a8ff6e464d81a5df21710ef66946286f76271d8568bcda7`  `RESULT.md`
+- `61cadaedfe24ab321fd25827f0bc68103a45f7abbe3491031f10d0378dfcc994`  `replay.py`
+- `a6cff2a1f97f5b64c0a5a89a5a11775cc95e3b61ccaf55cca6c5da19fedb0a76`  `independent.py`

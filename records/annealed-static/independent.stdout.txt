@@ -1,0 +1,4 @@
+ALL INDEPENDENT ANNEALED-STATIC CHECKS PASSED.
+[integer_rationals] {'lead': '62/675', 'lead_g4': '248/675', 'combined': '8348/675', 'gap': '1/3'}
+[fock_and_interval_minors] {'det_direct_fock': '-4593.029153065966161060434', 'det_dimer_ph': '35.76887199956216591042958', 'det_m1_c4': '-203.8547627358099407795434', 'det_m2_c4': '-58763809479.52499133511816'}
+[time_domain_cross_check] {'ax_td_res': np.float64(0.7294768233501329), 'ax_td_buf': np.float64(1.0059674713857325e-05), 'diff_res': np.float64(7.663869538987456e-12), 'diff_buf': np.float64(8.150930627605531e-13)}
