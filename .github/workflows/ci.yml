@@ -20,7 +20,14 @@ jobs:
           total=$(find . -type f -not -path './.git/*' | wc -l)
           test $((total - 2)) -eq "$(wc -l < MANIFEST.sha256)"
       - name: Install pinned replay dependencies
-        run: python -m pip install --disable-pip-version-check numpy==2.5.5 scipy==1.18.1 sympy==1.14.0 mpmath==1.4.1 python-flint==0.9.0
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy==2.5.5 scipy==1.18.1 mpmath==1.4.1 python-flint==0.9.0
+          # sympy 1.14.0 declares mpmath<1.4, but its only runtime use of mpmath is
+          # `mpmath` itself, and this suite runs against mpmath 1.4.1; install it
+          # without the solver so the pin set above is not silently downgraded.
+          python -m pip install --disable-pip-version-check --no-deps sympy==1.14.0
+          python -c "import numpy, scipy, sympy, mpmath, flint; print(numpy.__version__, scipy.__version__, sympy.__version__, mpmath.__version__, flint.__version__)"
       - name: Static-mode cumulant replay
         working-directory: records/static-mode
         run: |
