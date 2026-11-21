@@ -36,7 +36,16 @@ jobs:
           grep -qF '"coefficient_majorized_from_below": "1/1148"' replay.out
           grep -qF '"bridge_constant": "1/1200"' replay.out
           grep -qF '"embedded_constant": "1/2400"' replay.out
-          grep -qF '"sum_rule_max_error": 3.863576125695545e-14' replay.out
+          # The floating-point diagnostics are platform dependent (3.86e-14 on
+          # Windows, 1.78e-14 on Linux), so assert the tolerance, not the digits.
+          python - replay.out <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1]))
+          assert report["status"] == "NUMERICAL", report["status"]
+          assert report["exact_constants"]["coefficient_majorized_from_below"] == "1/1148"
+          assert report["sum_rule_max_error"] < 1e-12, report["sum_rule_max_error"]
+          print("static-mode sum-rule error", report["sum_rule_max_error"])
+          PY
       - name: Linear-fresh fixtures, mutants and independent implementation
         working-directory: records/linear-fresh
         run: |

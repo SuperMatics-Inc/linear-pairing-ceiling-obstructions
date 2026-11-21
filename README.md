@@ -34,11 +34,14 @@ The bounds are on the model quantities `T_pair` and `T_lin`. They are not bounds
 Python 3.12 is used with pinned dependencies: `numpy==2.5.5`, `scipy==1.18.1`, `sympy==1.14.0`, `mpmath==1.4.1`, `python-flint==0.9.0`. From the repository root:
 
 ```sh
-python -m pip install numpy==2.5.5 scipy==1.18.1 sympy==1.14.0 mpmath==1.4.1 python-flint==0.9.0
+python -m pip install numpy==2.5.5 scipy==1.18.1 mpmath==1.4.1 python-flint==0.9.0
+python -m pip install --no-deps sympy==1.14.0
 (cd records/static-mode && python -B replay.py)
 (cd records/linear-fresh && python -B replay.py && python -B replay.py --all-mutants && python -B independent.py)
 (cd records/puressh && python -B replay.py && python -B replay.py --all-mutants && python -B ed_check.py)
 ```
+
+`sympy` is installed without its dependency solver because it declares `mpmath<1.4` while this suite runs on `mpmath==1.4.1`; its only runtime requirement is `mpmath` itself.
 
 Every command above exits 0 on a correct tree. In each record `replay.py` exits 0 when its fixtures pass, and the guarded-mutant drivers reject every corrupted variant, 16 in `linear-fresh` and 12 in `puressh`, each rejected run exiting 1. `records/static-mode/CHECKS.txt` records the retained failure of the first run of that replay and the numerically diagnosed fix that resolved it.
 
