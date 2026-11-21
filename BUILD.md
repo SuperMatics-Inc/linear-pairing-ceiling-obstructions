@@ -126,34 +126,38 @@ is a separate deposit; it is not part of this directory.
 
 ## Release build, version 1.1.0
 
-The deposited manuscript is the reviewed text byte for byte: `paper/main.tex`
-(81,203 bytes, SHA-256
+The deposited manuscript is the reviewed text and the reviewed build, byte for
+byte: `paper/main.tex` (81,203 bytes, SHA-256
 `f45323746d156dfefd4a7d525beeb7bf7e06445a1a7e397db6fe1d4ef7172c2a`) is this
-directory's reviewed source, with no release-metadata edits, and `paper/refs.bib`
-(2,744 bytes, SHA-256
-`f3b576c5068a1779b91e632842c994dbf9d1cb2e038b67bb83aaa5ce6247f28c`) is the reviewed
-bibliography, whose page and issue ranges keep their en dashes (`693--717`,
-`511--522`, `973--978`, `3-4`, `5-6`). Only em dashes are excluded from the released
-text; en dashes in bibliographic page and issue ranges are reviewed typography and
-are kept.
+directory's reviewed source with no release-metadata edits, `paper/refs.bib`
+(2,746 bytes, SHA-256
+`d555d2ec1c57c0cdada78e96400e900c33b52f92967d8f4e0c17fe56ac78a675`) is the reviewed
+bibliography, and `paper/main.pdf` (230,895 bytes, SHA-256
+`fc2154aa254e88e10df1aca0bcacd35cc24d94ff850339efa87e71248c3faa3c`) is the reviewed
+PDF built from those two files. Only em dashes are excluded from the released text;
+the en dashes in bibliographic page and issue ranges (`693--717`, `511--522`,
+`973--978`, `3--4`, `5--6`) are reviewed typography and are kept.
 
 The manuscript therefore carries no DOI and no repository URL. The version 2 DOIs,
 the version 1 DOIs, the supplement DOI and the source repository are recorded in the
 Zenodo record metadata, in `README.md` and in `CITATION.cff`, not in the deposited
 paper.
 
-The release build sets `SOURCE_DATE_EPOCH=1795132800` (2026-11-20T00:00:00Z):
+The build command is
 
 ```
 SOURCE_DATE_EPOCH=1795132800 D:/dev/tools/tectonic/tectonic.exe --keep-logs main.tex
 ```
 
-Exit status `0`, 21 pages, 230892 bytes, SHA-256
-`98423ed3920cf826b4ab51972a95b46865cf6dbb672cde33858f325f1d0140de`. Two consecutive
-builds of these bytes under that epoch produced this same SHA-256. `main.log` reports
-0 `Overfull`, 0 `Underfull` and 0 `undefined` lines, and `main.blg` carries no
-warning. The text checks of the section above were re-run on this PDF and all pass:
-no em dash, the exact sentence "This preprint has not been peer reviewed.", the AI
-disclosure and the byline are present, and no internal lane, agent, machine or path
-token appears outside the disclosure. The only URL annotation in the PDF is the
-author ORCID.
+A rebuild of these two files under that epoch exits `0` and reproduces the same
+21-page text with the same checks, but not the same bytes: Tectonic records its own
+creation date and trailer, so the rebuild is a few bytes shorter. The hosted CI
+therefore rebuilds the paper, fails on any overfull box, underfull box or undefined
+reference, and re-runs the text checks on its own PDF; it does not pin the PDF bytes.
+
+`main.log` of the deposited build reports 0 `Overfull`, 0 `Underfull` and 0
+`undefined` lines, and `main.blg` carries no warning. The text checks were re-run on
+the deposited PDF and all pass: no em dash, the exact sentence "This preprint has not
+been peer reviewed.", the AI disclosure and the byline are present, and no internal
+lane, agent, machine or path token appears outside the disclosure. The only URL
+annotation in the PDF is the author ORCID.
