@@ -19,6 +19,12 @@ jobs:
           test "$(wc -l < MANIFEST.sha256)" = "$(wc -l < ADMITTED.sha256)"
           total=$(find . -type f -not -path './.git/*' | wc -l)
           test $((total - 2)) -eq "$(wc -l < MANIFEST.sha256)"
+          # No review-cycle file ships in the tree; reviews belong to the version
+          # history of the repository, not to the released bytes.
+          if find . -path ./.git -prune -o -type f -print \
+               | grep -iE '/(REVIEW|FIX|SCOPING)[^/]*$|\.(bak|orig|rej)$'; then
+            echo 'review-cycle file found in the tree'; exit 1
+          fi
       - name: Install pinned replay dependencies
         run: |
           set -euo pipefail
@@ -46,6 +52,20 @@ jobs:
           assert report["sum_rule_max_error"] < 1e-12, report["sum_rule_max_error"]
           print("static-mode sum-rule error", report["sum_rule_max_error"])
           PY
+      - name: Annealed static-field replay, mutants and independent implementation
+        working-directory: records/annealed-static
+        run: |
+          set -euo pipefail
+          python -B replay.py | tee replay.out
+          grep -qF 'ALL ANNEALED-STATIC REPLAY CHECKS PASSED.' replay.out
+          grep -qF "'combined_g_quarter': '8348/675'" replay.out
+          grep -qF "'g_quarter_lead': '248/675'" replay.out
+          grep -qF "'max_first_order': '0'" replay.out
+          python -B replay.py --all-mutants | tee mutants.out
+          grep -qF 'ALL 14 MUTANTS REJECTED.' mutants.out
+          python -B independent.py | tee independent.out
+          grep -qF 'ALL INDEPENDENT ANNEALED-STATIC CHECKS PASSED.' independent.out
+          grep -qF "'combined': '8348/675'" independent.out
       - name: Linear-fresh fixtures, mutants and independent implementation
         working-directory: records/linear-fresh
         run: |
@@ -83,8 +103,9 @@ jobs:
           set -euo pipefail
           # Only em dashes are banned. En dashes in bibliographic page and issue
           # ranges are reviewed typography and are allowed.
-          if grep -nF '—' paper/main.tex README.md; then exit 1; fi
-          if grep -nE '\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' paper/main.tex README.md; then exit 1; fi
+          prose='paper/main.tex README.md BUILD.md CLAIMS.md CITATION.cff'
+          if grep -nF '—' $prose; then exit 1; fi
+          if grep -nE '\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/|\bMac\b|\blane\b|\bscratch\b|reserved DOI|awaits review' $prose; then exit 1; fi
           grep -qF 'This preprint has not been peer reviewed.' paper/main.tex
           grep -qF 'This preprint has not been peer reviewed.' README.md
   paper:
@@ -108,6 +129,7 @@ jobs:
           tectonic --keep-logs main.tex
           if grep -nE 'Overfull|Underfull|Undefined|Citation.*undefined|There were undefined' main.log; then exit 1; fi
           test -s main.pdf
+          sha256sum main.pdf
           pdfinfo -url main.pdf > urls.txt
           grep -qF 'https://orcid.org/0000-0001-5839-5197' urls.txt
           pdftotext main.pdf main.txt
@@ -115,7 +137,7 @@ jobs:
           if grep -nF '—' main.txt; then exit 1; fi
           if grep -nE '\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' main.txt; then exit 1; fi
           tr -s '[:space:]' ' ' < main.txt | grep -qF 'This preprint has not been peer reviewed.'
-          tr -s '[:space:]' ' ' < main.txt | grep -qF 'separate AI agents carried out the independent reviews.'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'separate AI agents performed the independent reviews.'
       - uses: actions/upload-artifact@v4
         with:
           name: linear-pairing-ceiling-obstructions-paper

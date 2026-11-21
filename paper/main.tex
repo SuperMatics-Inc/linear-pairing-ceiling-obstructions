@@ -43,8 +43,9 @@ vanishing effective attraction}
 Can the pair-ordering temperature of a Holstein or bond-SSH electron-phonon model
 be bounded at a temperature scale proportional to the phonon frequency, uniformly
 in that frequency and at fixed hopping and coupling? That linear step remains open,
-and this note does not close it. It records three exact obstructions that identify
-which proof methods cannot reach it, together with the regimes in which a
+and this note does not close it. It records exact obstructions to fixed-field
+cumulant, positive-determinant, reflection-positivity and vanishing-attraction routes,
+heuristic syntheses for the annealed route, and the regimes in which a
 frequency-uniform ceiling does survive. First, for the Holstein model with
 arbitrary real static site fields, the exact first coefficient of the local
 dynamic cumulant, computed with the dynamic Gaussian already integrated out,
@@ -62,7 +63,14 @@ $\Ueff\in\R$, the high-temperature regime closes with identical constants: for
 $\beta|t|+\beta\Gb\le2^{-10}$ the pair correlator is at most
 $(341/103)(32/341)^{d}$, uniformly in $\Ueff$, phonon frequencies, chemical potential
 and density, so $k_B\Tpair\le1024(|t|+\Gb)$, while three further proof routes
-remain obstructed at $\Ueff=0$. Combining this uniform ceiling with strong-coupling
+remain obstructed at $\Ueff=0$. Fourth, annealing the static field brings the
+conditional first cumulant down to a constant times $\Omega^2/\tau^2$ uniformly in
+volume, which removes the fixed-field resonance, but neither candidate reflection
+kernel is reflection positive where a chessboard factorization would be used; and, as
+heuristic syntheses rather than theorems, a separating contour pays a perimeter price
+that grows faster than the decay it should supply, and the static-gap corridor the
+annealed estimate needs lies above the temperatures already covered by the
+frequency-uniform ceiling. Combining this uniform ceiling with strong-coupling
 bounds gives explicit minimum ceilings for $\Ueff<0$ at all densities and for
 $\Ueff>0$ at half filling, whereas exact dimer calculations show that neither
 $\chi_{\pair}$ nor $|\langle\Delta_x^\dagger\Delta_y\rangle|$ is monotone
@@ -71,6 +79,23 @@ transition temperature, and no materials claim is made.
 \end{abstract}
 
 \section{Question, scope, and prior work}
+
+\emph{Version 3 note.} This version supersedes version 2 of this preprint, DOI
+\DOI{10.5281/zenodo.24409383}, and it leaves every statement of that version intact,
+including the $\Ueff$-uniform theorems of Section~\ref{sec:survives}. It adds
+Section~\ref{sec:annealed}, which examines the annealed static marginal as a route to
+a frequency-uniform ceiling. That section proves the volume-uniform annealed
+first-cumulant bound of Theorem~\ref{thm:annealed}, proves in Theorem~\ref{thm:rp}
+that neither candidate reflection kernel is reflection positive where a chessboard
+factorization would be applied, and proves the arithmetic of the static-gap corridor
+in Proposition~\ref{prop:collapse}. It also records two syntheses, marked as
+syntheses and not proved: a separating contour pays a perimeter price that grows
+faster than the decay it should supply (Remark~\ref{rem:contour}), and the corridor
+the annealed estimate needs lies above the temperatures already covered by the
+frequency-uniform ceiling (Remark~\ref{rem:corridor}). Beyond that, this version
+updates the open-problem item on reflection and infrared arguments and the list
+of what is not claimed, so that the annealed route is
+recorded there, and it corrects the page range of \cite{frohlich2005}.
 
 We study the spinful Holstein and bond-SSH models on square tori, at fixed
 nearest-neighbour hopping $t>0$, fixed electron-phonon coupling, fixed density or
@@ -110,6 +135,16 @@ linear temperature scale: an explicit three-site static field at fixed bare hopp
 produces a resonance whose contribution is $\Theta(U\Omega^2/\tau^3)$. This blocks
 unresummed expansions about the static reference whose local activity must dominate
 that cumulant (Section~\ref{sec:cumulant}).
+\item Annealing the static field removes the resonance but not the difficulty. Under
+the Gibbs-weighted static marginal the first dynamic cumulant is at most a constant
+times $\Omega^2/\tau^2$, uniformly in volume, so along a linear ray it is bounded by
+a genuine constant rather than diverging. That bound is one coefficient of an
+expansion and not a ceiling, and neither standard way to promote it to spatial decay
+closes the gap: the two candidate reflection kernels are not reflection positive,
+a separating contour must pay a perimeter price that outruns the decay it is meant to
+establish, and the static-gap corridor in which the annealed estimate holds is the
+strong-coupling corner that the frequency-uniform ceilings already cover
+(Section~\ref{sec:annealed}).
 \item A positive Fermion determinant, even together with positive monodromy
 eigenvalues, does not bound a conditional impurity Green function. An exact
 two-slice family gives $\det(1+U)>1$ and $|\Ggreen(1,0)_{00}|\sim B^2/(2v^2)$, so no
@@ -134,7 +169,9 @@ Section~\ref{sec:open} lists what is missing.
 
 Section~\ref{sec:model} fixes the models and defines the model quantity
 $\Tpair$ that every result in this note concerns. Sections~\ref{sec:cumulant},
-\ref{sec:det} and \ref{sec:survives} contain the results.
+\ref{sec:annealed}, \ref{sec:det} and \ref{sec:survives} contain the results, in that
+order: the conditional cumulant obstruction, the annealed route and its obstruction,
+the determinant obstruction, and what survives.
 Section~\ref{sec:notclaimed} states what is not claimed, and
 Section~\ref{sec:open} lists open problems.
 
@@ -599,6 +636,500 @@ witness that attains it after exact Hartree cancellation and full Matsubara
 integration, without a determinant zero and without an atomic reference.
 \end{remark}
 
+\section{The annealed route: defect rarity, reflection positivity, separating contours}
+\label{sec:annealed}
+
+The obstruction of Section~\ref{sec:cumulant} holds at one fixed static field. The
+natural reply is to anneal: if resonant static fields are exponentially rare under
+the Gibbs-weighted static marginal, a conditional expansion may still converge, and a
+first cumulant of order $U\Omega^2/\tau^3$ at a rare field would then cost nothing on
+average. Remark~\ref{rem:notclass} notes that the witness field \eqref{eq:fields3}
+has a middle value of order $\tau^{-1}$ at fixed hopping and is therefore atypical.
+This section follows the annealed route as far as it goes and reports where it stops.
+
+The annealed first cumulant is bounded by a constant times $\Omega^2/\tau^2$,
+uniformly in volume (Theorem~\ref{thm:annealed}), so the $\tau^{-3}$ resonance is
+gone and along a linear ray the bound is a genuine constant, $248/(675C^2)$ at the
+largest admissible gap threshold, for ray constants $C\ge\sqrt{252}$. That is not yet a ceiling, since one coefficient of
+the expansion of $\log Z$ does not control the pair correlator. The two standard ways
+to promote annealed static control to clustering then fail. Neither candidate
+reflection kernel is reflection positive on the geometries where a chessboard
+factorization would be used (Theorem~\ref{thm:rp}), and a separating contour must pay
+a perimeter price that grows faster than the decay it is meant to dominate
+(Remark~\ref{rem:contour}). Finally, the static-gap hypothesis that underlies the
+annealed estimate is confined to temperatures already covered by the
+frequency-uniform results of Section~\ref{sec:survives} and of \cite{stage6}
+(Proposition~\ref{prop:collapse}).
+
+\subsection{The annealed static marginal and its defect rarity}
+
+Completing the square in the oscillator coordinates of \eqref{eq:H} gives, at each
+site and for the free oscillator measure, the static Gaussian law
+$b_{0,x}\sim N(0,U/\beta)$, independent over sites. With $W_x=b_{0,x}-\mu$, the
+annealed static marginal is
+\begin{equation}
+\begin{aligned}
+P_s(db_0)&=\frac{\gamma_s(db_0)\,Z(b_0)}{Z},\\
+Z(b_0)&=\Tr_{\mathrm{Fock}}e^{-\beta H_W}R_W(1)
+=\E_v\Tr_{\mathrm{Fock}}\,T\exp\!\Bigl[-\int_0^\beta\Bigl(H_W+\sum_xv_x(u)n_x\Bigr)du\Bigr],
+\end{aligned}
+\label{eq:Ps}
+\end{equation}
+with $\gamma_s$ the product Gaussian law and $R_W$ as in \eqref{eq:RW}. For every
+real $W$ and every real history $v$ the two spin sectors are identical and
+independent, and each carries a real symmetric one-particle matrix, so the
+time-ordered trace equals the square of a real determinant; it is therefore
+nonnegative for every $v$ and strictly positive at $v=0$, and by continuity
+$Z(b_0)>0$, so \eqref{eq:Ps} is a probability density. Everything below is an average against $P_s$, and $P_s$ is the
+measure under which the words rare and typical are used.
+
+\begin{definition}[Defect set]
+\label{def:defect}
+For a static gap threshold $\kappa>0$ put $D_\kappa(b_0)=\{x\in\Lambda:
+|W_x|<\kappa\}$. A site outside $D_\kappa(b_0)$ has static potential of magnitude at
+least $\kappa$.
+\end{definition}
+
+\begin{lemma}[Annealed rarity of near-Fermi sites]
+\label{lem:rarity}
+Let $\Lambda=(\mathbb{Z}/L\mathbb{Z})^2$ be a square torus with $L\ge4$, which has maximum degree
+four, let $0<\kappa\le U/4$, $0\le t\le\kappa/64$, $\sqrt{252}\,\Omega\le\tau\le U/64$,
+and let $\mu\in\R$ be arbitrary. Then for every finite set $B\subset\Lambda$, uniformly in
+the volume,
+\begin{equation}
+P_s\bigl(B\subset D_\kappa(b_0)\bigr)\le\exp\!\left(-\frac{U|B|}{48\tau}\right).
+\label{eq:rarity}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+This is the centered insertion bound of \cite{limits} with no electronic insertions
+and with an empty envelope support. In the notation of that theorem, take $B'=\varnothing$
+and no operators, so the envelope weight is identically one and $K_O=1$, and take the
+stated gap and hopping hypotheses. The theorem then bounds the joint probability of
+$E_B$ in the full annealed state by $\exp(-\lambda|B|/48)$ with $\lambda=\beta U$.
+The frequency-window hypothesis $\beta\Omega\le1/\sqrt{252}$ of that statement is
+kept here, so the estimate is quoted exactly in the form in which it is proved.
+\end{proof}
+
+\begin{remark}
+The two hypotheses $\tau\le U/64$ and $\sqrt{252}\,\Omega\le\tau$ are the ones under
+which \eqref{eq:rarity} is released. Along a linear ray $\tau=C\Omega$ they say
+$C\ge\sqrt{252}$ and $\Omega\le U/(64C)$, and \eqref{eq:rarity} then reads
+$\exp(-U/(48C\Omega))$, which decays faster than any power of $\Omega$. Nothing below
+uses more than the single-site case $|B|=1$.
+\end{remark}
+
+\subsection{The annealed first cumulant}
+
+The static reference of Section~\ref{sec:cumulant} is well behaved for every field,
+and a field with no near-Fermi site is gapped. The next lemma quantifies how a gap
+in a ball around $x$ controls $a_x$ without any condition on the rest of the
+lattice.
+
+\begin{lemma}[Gapped local cumulant]
+\label{lem:gapped}
+Let $g_0>0$ and suppose that every eigenvalue $e_a$ of $h_W$ satisfies $|e_a|\ge g_0$.
+Then for every $\nu_n\ne0$
+\begin{equation}
+0\le\chi_x(i\nu_n)\le\frac{1}{2g_0},\qquad
+0\le a_x(W)\le\frac{U\Omega^2}{24\tau^2g_0}.
+\label{eq:gapped}
+\end{equation}
+More generally, let $\Lambda$ have maximum degree at most four and let
+$R\ge0$; suppose $|W_y|\ge\kappa$ for all $y$ with $d(x,y)\le R$ and $4t\le\kappa/16$,
+and let $h_0$ be $h_W$ with the hopping across the sphere $d(x,\cdot)=R$ removed. Then
+$h_0$ has a gap at least $\kappa-4t$ on the ball, and
+\begin{equation}
+\bigl|R_W(i\omega_k)_{xx}-R_0(i\omega_k)_{xx}\bigr|
+\le\frac{1}{|\omega_k|}\frac{(4t/\kappa)^{2R+2}}{(1-4t/\kappa)^2},
+\label{eq:leak}
+\end{equation}
+hence, with $R(\tau,\kappa)=\max\bigl(0,\lceil\log(\kappa/\tau)/\log16\rceil-1\bigr)$,
+\begin{equation}
+0\le a_x(W)\le\frac{U\Omega^2}{24\tau^2}\left[\frac{1}{\kappa-4t}
++\frac{1}{\tau}\frac{(4t/\kappa)^{2R+2}}{(1-4t/\kappa)^2}\right]
+\le\frac{62}{675}\,\frac{U\Omega^2}{\tau^2\kappa}.
+\label{eq:buffer}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Every summand of \eqref{eq:first} is bounded by
+$|\chi|$-type quotients: for $e_a\ne e_b$ and $\nu_n\ne0$,
+\begin{equation}
+Q(e_a,e_b;\nu_n)=\frac{[f(e_a)-f(e_b)](e_b-e_a)}{\nu_n^2+(e_b-e_a)^2}
+\le\frac{|f(e_a)-f(e_b)|}{|e_b-e_a|}.
+\label{eq:quot}
+\end{equation}
+If $e_ae_b<0$ then $|e_b-e_a|\ge2g_0$ and $|f(e_a)-f(e_b)|\le1$, so
+$Q\le1/(2g_0)$. If $e_ae_b>0$, the mean value theorem gives $|f'(\xi)|$ at some
+$\xi$ between them with $|\xi|\ge g_0$, and since
+$\cosh^2u>1+u^2\ge2u$ for $u>0$,
+\[
+|f'(\xi)|=\frac{\beta}{4\cosh^2(\beta\xi/2)}
+\le\frac{\beta}{4\cosh^2(\beta g_0/2)}<\frac{\beta}{2\beta g_0}=\frac{1}{2g_0}.
+\]
+Summing \eqref{eq:quot} with weights $p_a(x)p_b(x)$, whose total mass is one, gives
+$0\le\chi_x(i\nu_n)<1/(2g_0)$, and
+$2U\sum_{n\ge1}r_n<2U\Omega^2\sum_{n\ge1}\nu_n^{-2}=U\Omega^2/(12\tau^2)$ with
+$\sum_{n\ge1}\nu_n^{-2}=1/(24\tau^2)$ gives the second claim after dividing by
+$2g_0$.
+
+For the ball estimate, Gershgorin's theorem on the ball gives every eigenvalue of the
+block at least $\kappa-4t$ in modulus, and the block-diagonal resolvent $R_0$
+satisfies $(R_0T_\partial R_0)_{xx}=0$ because $x$ is at distance $R$ from the
+boundary sphere and $R_0$ is block diagonal. Two applications of the second resolvent
+identity give $R_W-R_0=R_0T_\partial R_0+R_0T_\partial R_WT_\partial R_0$, so at the
+diagonal entry
+\[
+R_W(i\omega_k)_{xx}-R_0(i\omega_k)_{xx}
+=\bigl(R_0P_{\partial}T_\partial R_WT_\partial P_{\partial}R_0\bigr)_{xx},
+\]
+with each $T_\partial$ moving a particle only across the sphere $d(x,\cdot)=R$, so
+that $P_{\partial}R_0(i\omega_k)\delta_x$ carries only hopping paths of length at
+least $R$ inside the ball. The Neumann series for $R_0$ inside the ball gives
+$\|P_\partial R_0(i\omega_k)\delta_x\|\le\kappa^{-1}(4t/\kappa)^R/(1-4t/\kappa)$
+and $\|T_\partial\|\le4t$, hence
+$\|T_\partial P_\partial R_0(i\omega_k)\delta_x\|\le(4t/\kappa)^{R+1}/(1-4t/\kappa)$;
+Cauchy-Schwarz in the last display together with
+$\|R_W(i\omega_k)\|\le|\omega_k|^{-1}$ then gives
+$|\omega_k|^{-1}\bigl((4t/\kappa)^{R+1}/(1-4t/\kappa)\bigr)^2$, which is
+\eqref{eq:leak}. The corresponding change of $\chi_x$ is bounded by the same
+Cauchy-Schwarz estimate on the Matsubara sum,
+$|\chi_x-\chi_x^{(0)}|\le\eta/(2\tau)$ with $\eta=(4t/\kappa)^{2R+2}/(1-4t/\kappa)^2$,
+and $2U\sum_{n\ge1}r_n<U\Omega^2/(12\tau^2)$ turns this into the bracket of
+\eqref{eq:buffer}. At $4t\le\kappa/16$ one has $1/(\kappa-4t)\le16/(15\kappa)$, and
+$(4t/\kappa)^{2R+2}\le\tau/\kappa$ by the choice of $R$, so
+$\eta\le(256/225)\tau/\kappa$ and the bracket is at most
+$(16/15+256/225)/\kappa=496/(225\kappa)$ and
+$496/(225\cdot24)=62/675$.
+\end{proof}
+
+\begin{theorem}[Annealed first dynamic cumulant]
+\label{thm:annealed}
+Let $\Lambda=(\mathbb{Z}/L\mathbb{Z})^2$ be a square torus with $L\ge4$, so that
+$|B_R(x)|\le2R^2+2R+1$ holds for all $x$ and all integers $R\ge0$. Let
+$0<\kappa\le U/4$, $0\le t\le\kappa/64$ and $\sqrt{252}\,\Omega\le\tau\le U/64$, and
+put $R(\tau,\kappa)=\max\bigl(0,\lceil\log(\kappa/\tau)/\log16\rceil-1\bigr)$. Then,
+uniformly in $|\Lambda|$, in $\mu$ and in $x$,
+\begin{equation}
+\E_{P_s}\bigl[a_x(W)\bigr]
+\le\frac{U\Omega^2}{24\tau^2}\left[\frac{496}{225\kappa}
++\frac{2R^2+2R+1}{2\tau}e^{-U/(48\tau)}\right]
+<\left(\frac{62}{675}\frac{U}{\kappa}+12\right)\frac{\Omega^2}{\tau^2}.
+\label{eq:annealed}
+\end{equation}
+For $\kappa=U/4$, which requires $t\le U/256$,
+\begin{equation}
+\E_{P_s}\bigl[a_x(W)\bigr]\le\frac{8348}{675}\,\frac{\Omega^2}{\tau^2}<\frac{25}{2}\frac{\Omega^2}{\tau^2},
+\label{eq:annealed4}
+\end{equation}
+and along a linear ray $\tau=C\Omega$ with $C\ge\sqrt{252}$ and $\Omega\le U/(64C)$
+one has $\E_{P_s}[a_x(W)]<8348/(675C^2)$, while
+\begin{equation}
+\limsup_{\Omega\downarrow0,\ \tau=C\Omega}\E_{P_s}\bigl[a_x(W)\bigr]
+\le\frac{62}{675}\frac{U}{\kappa}\frac{1}{C^2}=\frac{248}{675C^2}<\frac{1}{2C^2}
+\label{eq:ray}
+\end{equation}
+at $\kappa=U/4$.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal{G}_R(x)=\{b_0:B_R(x)\cap D_\kappa(b_0)=\varnothing\}$. On
+$\mathcal{G}_R(x)$ the buffer estimate \eqref{eq:buffer} of
+Lemma~\ref{lem:gapped} gives $a_x(W)\le(62/675)U\Omega^2/(\tau^2\kappa)$. On the
+complement, the universal bound of Lemma~\ref{lem:aux}(i),
+$a_x(W)\le U\Omega^2/(48\tau^3)$, applies, and the union bound with
+Lemma~\ref{lem:rarity} at $|B|=1$ gives
+$P_s(\mathcal{G}_R(x)^c)\le|B_R(x)|e^{-U/(48\tau)}$. Splitting the expectation
+proves the first inequality of \eqref{eq:annealed}.
+
+For the second, put $u=U/(48\tau)\ge64/48$ and $q_0=\kappa/U\le1/4$, so that
+$\kappa/\tau=q_0U/\tau=48q_0u\le12u$. If $R\ge1$ then $16^R<\kappa/\tau\le12u$ by the
+definition of $R$, and Bernoulli's inequality gives $16^R=(1+15)^R\ge1+15R>12R$, so
+$R\le u$; if $R=0$ this is immediate. Hence
+\[
+\frac{U\Omega^2}{24\tau^2}\frac{2R^2+2R+1}{2\tau}e^{-u}
+=u(2R^2+2R+1)e^{-u}\frac{\Omega^2}{\tau^2}
+\le(2u^3+2u^2+u)e^{-u}\frac{\Omega^2}{\tau^2}<12\frac{\Omega^2}{\tau^2},
+\]
+because $e^u>u+u^2/2+u^3/6$ implies $2u^3+2u^2+u<12e^u$. Setting $\kappa=U/4$
+turns the bracket into $4\cdot62/675+12=8348/675<25/2$, which also uses
+$t\le\kappa/64\le U/256$.
+
+For \eqref{eq:ray}, fix $C$ and take $\tau=C\Omega$ with $\Omega\downarrow0$. Then
+$u=U/(48C\Omega)\to\infty$ while $R=O(\log(1/\Omega))$, so the rare-defect term
+tends to zero and only the gapped term survives; at $\kappa=U/4$ its coefficient is
+$(62/675)(U/\kappa)/C^2=248/(675C^2)$, and $496<675$.
+\end{proof}
+
+Statement~\ref{thm:annealed} is the annealed bound of Section~\ref{sec:annealed} in
+the restricted form used here, in which the rarity estimate is quoted from
+\cite{limits} on the window $\sqrt{252}\,\Omega\le\tau\le U/64$. The argument
+behind it covers every finite graph whose balls satisfy $|B_R(x)|\le2R^2+2R+1$,
+including rings and the square tori with $L\ge4$ used here. It reaches the wider
+window $\Omega\le\tau\le U/16$ only after the rarity estimate of
+Lemma~\ref{lem:rarity} is replaced by the wider-window rarity bound recorded in the
+annealed supplement, which is not quoted in this note; in the restricted form the
+hypotheses above are therefore a subset of those the wider argument supplies, and the
+constants $\frac{496}{225}$, $\frac{62}{675}$, $12$, $\frac{248}{675}$,
+$\frac{8348}{675}$ and $\frac{25}{2}$ are the ones obtained in that computation.
+
+\begin{remark}[A constant is not a ceiling]
+\label{rem:nottceil}
+Compare \eqref{eq:annealed4} with Theorem~\ref{thm:witness}. At a fixed static field
+the first cumulant is $\Theta(\Omega^2/\tau^3)$ and diverges along any linear ray;
+under the annealed measure it is at most a constant times $\Omega^2/\tau^2$, and
+$248/(675C^2)$ is a genuine constant along the ray. This removes the fixed-field
+resonance as an obstruction to the annealed route, and it does not produce a ceiling.
+A bound on one coefficient of the expansion of $\log Z$ constrains the pair
+correlator only through a convergence argument for the whole series, and the
+remaining terms are not controlled here. The constants $496/225$, $62/675$,
+$8348/675$ and $248/675$ are exact rationals, checked by exact rational arithmetic in
+the replay suite; the inequality $8348/675<25/2$ and $248/675<1/2$ are the only
+numerical comparisons used, and both are exact.
+\end{remark}
+
+\subsection{Reflection positivity fails for both candidate kernels}
+
+The first way to promote annealed static control to spatial decay is reflection
+positivity (chessboard) factorization of the static fermion determinant kernel: one
+splits the torus into halves, writes the kernel as a Gram matrix across the
+reflection plane, and uses positive semidefiniteness of that matrix to localize pair
+correlations. The next theorem shows that both kernels one can write down for the
+spinful problem fail, and that the failure is visible in a principal minor, so it is
+not a matter of a particular factorization estimate.
+
+For a pair of real field configurations $u=(u_1,u_2)$ and $v=(v_1,v_2)$ on the two
+halves of a dimer, write $h(u,v)=-tA+\diag(u\oplus v)$ for the one-particle matrix of
+the spinless problem and form the kernels
+\[
+K_{\mathrm{direct}}(u,v)=\det\bigl(I+e^{-\beta h(u,v)}\bigr)^2,\qquad
+M_1(u,v)=\det\bigl(e^{\beta h(u,-v)/2}+e^{-\beta h(u,-v)/2}\bigr),
+\]
+and $M_2(u,v)=M_1(u,v)^2$. The square in $K_{\mathrm{direct}}$ is the two-fold spin degeneracy, $M_1$ is
+the one-spin kernel written after a particle-hole transformation on one half, and
+$M_2$ is its Hadamard square, the two-spin kernel. Reflection positivity asks that
+$K_{\mathrm{direct}}$ and $M_2$ be positive semidefinite as kernels on pairs of field
+configurations.
+
+\begin{theorem}[Reflection positivity and its failure]
+\label{thm:rp}
+\mbox{}
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item On the two-site dimer with $\beta=1$, every $t>0$ and every $b>0$,
+$K_{\mathrm{direct}}(b,b)K_{\mathrm{direct}}(-b,-b)<K_{\mathrm{direct}}(b,-b)^2$. At
+$t=2$ and $b\in\{1,-1\}$ the principal minor is enclosed in
+\begin{equation}
+\begin{aligned}
+\det_{a,b\in\{-1,1\}}K_{\mathrm{direct}}(a,b)
+&=16(\cosh2+\cosh1)^4-16(\cosh\sqrt5+1)^4 \\
+&\in[-4593.0291530660,\,-4593.0291530659]<0 .
+\end{aligned}
+\label{eq:dimerfail}
+\end{equation}
+\item On the two-site dimer, for every $\beta>0$ and every $t\in\R$ the
+particle-hole kernel is
+\begin{equation}
+M_1^{\mathrm{dimer}}(b_1,b_2)=2\cosh\frac{\beta(b_1-b_2)}{2}
++2\cosh\Bigl(\beta\sqrt{\Bigl(\frac{b_1+b_2}{2}\Bigr)^2+t^2}\Bigr),
+\label{eq:dimerph}
+\end{equation}
+and it is positive semidefinite on $\R\times\R$, as is its Hadamard square $M_2^{\mathrm{dimer}}$.
+\item On the four-site zero-flux ring $C_4=\{0,1,2,3\}$ with the reflection
+$\vartheta(0)=3$, $\vartheta(1)=2$ across the two cut bonds $(0,3)$ and $(1,2)$, at
+$\beta=1$ and $t=2$, write $u=(u_1,u_2)$ for the field on the sites $0,1$ and
+$v=(v_1,v_2)$ for the field on the sites $2,3$ before the reflection, so that the
+one-particle matrix is
+\begin{equation}
+h^{C_4}(u,v)=\begin{pmatrix}u_1&-t&0&-t\\-t&u_2&-t&0\\0&-t&-v_2&-t\\-t&0&-t&-v_1\end{pmatrix},
+\label{eq:c4h}
+\end{equation}
+which is the field $u\oplus(-v\circ\vartheta)$ of the dimer convention with the
+negative sign acting on the reflected half. At $\beta=1$, $t=2$ and on the
+three-point set $S=\{(-2,-2),(-2,-1),(-1,-1)\}$, both particle-hole kernels have
+strictly negative
+$3\times3$ principal minors:
+\begin{equation}
+\begin{aligned}
+\det_{S}M_1^{C_4}&\in[-203.8547627359,\,-203.8547627358]<0,\\
+\det_{S}M_2^{C_4}&\in[-5.8763809480\times10^{10},\,-5.8763809479\times10^{10}]<0 .
+\end{aligned}
+\label{eq:c4fail}
+\end{equation}
+The same minor is attained by the direct kernel evaluated at \eqref{eq:c4h}: because
+$\det(e^{\beta h/2}+e^{-\beta h/2})=e^{\beta\Tr h/2}\det(I+e^{-\beta h})$ for the same
+$h$, one has $M_2(u,v)=e^{\beta(u_1+u_2-v_1-v_2)}K_{\mathrm{direct}}(u,v)$ on the pair
+$(u,v)$. The two $3\times3$ matrices on $S\times S$ are therefore diagonally similar,
+by $D(u)=e^{\beta(u_1+u_2)}$ on the left and $D(v)^{-1}$ on the right, and they have
+the same principal minor.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) On the dimer $h(b_1,b_2)$ has eigenvalues
+$\tfrac{b_1+b_2}{2}\pm\sqrt{(\tfrac{b_1-b_2}{2})^2+t^2}$, so
+\[
+\det\bigl(I+e^{-h(b_1,b_2)}\bigr)
+=2e^{-(b_1+b_2)/2}\Bigl[\cosh\frac{b_1+b_2}{2}
++\cosh\sqrt{\Bigl(\frac{b_1-b_2}{2}\Bigr)^2+t^2}\Bigr].
+\]
+Taking $(b_1,b_2)=(b,b),(b,-b),(-b,-b)$ and squaring, the claimed inequality is
+equivalent to
+$\cosh b+\cosh t<1+\cosh\sqrt{b^2+t^2}$, which is the statement
+\[
+\cosh\sqrt{b^2+t^2}-1-(\cosh b-1)-(\cosh t-1)
+=\sum_{n\ge2}\frac{(b^2+t^2)^n-b^{2n}-t^{2n}}{(2n)!}
+>\frac{2b^2t^2}{4!}=\frac{b^2t^2}{12}
+\]
+for $b,t>0$, because every numerator is a sum of mixed terms and positive. At
+$b=1$, $t=2$ this gives \eqref{eq:dimerfail}, whose endpoints are enclosed by
+outward ball arithmetic and independently by a four-state Fock trace.
+
+(ii) Replacing $b_2$ by $-b_2$ after the particle-hole transformation on the
+reflected site maps the one-particle spectrum to
+$\{-(b_1-b_2)/2,(b_1-b_2)/2,-\rho,\rho\}$ with
+$\rho=\sqrt{((b_1+b_2)/2)^2+t^2}$, which is \eqref{eq:dimerph}.
+
+The first term of \eqref{eq:dimerph} is not positive semidefinite by itself: at
+$x_1=0$, $x_2=1$ its $2\times2$ determinant is $4\bigl(1-\cosh^2(\beta/2)\bigr)<0$ for
+every $\beta>0$. It becomes positive semidefinite when combined with the leading term of the
+even-sector expansion. With $H_0=\tfrac{b_1+b_2}{2}\sigma_z$ and $V=-t\sigma_x$, the
+Duhamel series for $\Tr_{\mathrm{even}}e^{-\beta(H_0+V)}$ retains only even orders
+because the odd orders carry a single $\sigma_x$ and trace zero. Since $\sigma_x$
+anticommutes with $\sigma_z$, the $2m$-th order is
+\[
+t^{2m}\int_{0\le u_{2m}\le\dots\le u_1\le\beta}
+2\cosh\Bigl(\alpha(u)\frac{b_1+b_2}{2}\Bigr)\,du_1\dots du_{2m},
+\qquad
+\alpha(u)=\beta-2u_1+2u_2-\dots+2u_{2m},
+\]
+an integral over the ordered simplex, whose volume is $\beta^{2m}/(2m)!$ and whose
+integrand is already the $2m$-th order term. For every real $\alpha$,
+$2\cosh\bigl(\alpha\tfrac{b_1+b_2}{2}\bigr)
+=2\cosh\bigl(\tfrac{\alpha b_1}{2}\bigr)\cosh\bigl(\tfrac{\alpha b_2}{2}\bigr)
++2\sinh\bigl(\tfrac{\alpha b_1}{2}\bigr)\sinh\bigl(\tfrac{\alpha b_2}{2}\bigr)$
+is a sum of two rank-one kernels $f(b_1)f(b_2)$, so every $m\ge1$ order is a positive
+combination of such kernels. The $m=0$ order is $2\cosh\bigl(\beta\tfrac{b_1+b_2}{2}\bigr)$,
+and
+\[
+2\cosh\frac{\beta(b_1-b_2)}{2}+2\cosh\frac{\beta(b_1+b_2)}{2}
+=4\cosh\Bigl(\frac{\beta b_1}{2}\Bigr)\cosh\Bigl(\frac{\beta b_2}{2}\Bigr)
+\]
+is the rank-one kernel $f(b_1)f(b_2)$ with $f(b)=2\cosh(\beta b/2)$. Hence the
+odd-sector term plus the $m=0$ order is positive semidefinite, adding the $m\ge1$
+orders keeps the even-sector trace positive semidefinite, and \eqref{eq:dimerph} is
+positive semidefinite. The Hadamard square of a positive semidefinite matrix is
+positive semidefinite.
+
+(iii) Both minors of \eqref{eq:c4fail} are computed in $128$-bit outward ball
+arithmetic from $\exp$ and $\det$ of the four-by-four matrix \eqref{eq:c4h}, and
+independently by diagonalizing that matrix at $80$ decimal digits and summing over the
+sixteen occupation states of the one-spin Fock space; the two enclosures agree to more
+than twenty-five significant digits and both are strictly negative. The reproducing
+identity relating $M_2$ to $K_{\mathrm{direct}}$ on $S\times S$, with the diagonal
+similarity $D(u)=e^{\beta(u_1+u_2)}$ removed, is checked to an absolute error below
+$10^{-12}$. The mechanism is that a
+particle-hole transformation on the reflected half reverses the sign of the hopping on
+the bonds inside each half, which is harmless, and turns the two cut bonds into pairing
+terms whose relative sign is fixed by the zero flux of the four-site loop rather than
+by the canonical $\pi$ flux for which reflection positivity is known. Because the
+minor is a continuous function of the fields and because sending the static fields to
+$+\infty$ on the sites outside an induced four-cycle decouples those sites, the same
+negative minor persists on any larger bipartite ring or square torus containing an
+induced $C_4$.
+\end{proof}
+
+\begin{remark}[What the failure does and does not say]
+\label{rem:rpscope}
+Part (ii) shows that the particle-hole kernel is reflection positive on a dimer, so
+the obstruction of part (iii) is a property of cycles and not of the particle-hole
+transformation itself. Parts (i) and (iii) show that neither the direct kernel nor
+either particle-hole kernel is reflection positive on the geometries for which a
+two-dimensional chessboard factorization would be used, so any reflection positivity
+argument in this problem needs a kernel other than the three written above, together
+with its own proof. No statement here is about the possibility of some other
+factorization. Part (i) fails on a single bond, so the direct-kernel obstruction needs
+no cycle at all; only the particle-hole obstruction of part (iii) is a cycle effect.
+\end{remark}
+
+\subsection{Separating contours, and the collapse of the gap hypothesis}
+
+The second way to promote annealed static control to decay is a separating contour: a
+thick annulus free of defects cuts the torus into an interior containing $x$ and an
+exterior containing $y$, and one localizes the pair correlator by cutting the problem
+along the annulus.
+
+\begin{remark}[Separating contours: a synthesis, not a theorem]
+\label{rem:contour}
+Let $b_0$ have a connected $g$-gapped annulus of thickness $M$ separating an interior
+domain $U_0\ni x$ from $y$. The conditional pair correlator is a ratio whose numerator
+contains the two-spin determinant and the Wick pair propagator across $U_0$. The two
+standard localizations face the following two obstructions, each of which is proved
+separately and neither of which is a lower bound for every conceivable argument.
+\emph{Uncut boundary hopping.} If the hopping across $\partial U_0$ is kept, then
+inside a determinant zero of Theorem Z of \cite{barriers} the normalized propagator
+has a pole and the conditional Wick propagator is unbounded. That theorem provides,
+for each $\beta t\in\{40,100,1000\}$, a time-mean-zero history with
+$\beta\|v\|_\infty<5$ on an induced four-site star $K_{1,3}$ with zero static field on
+the star, and hence a vanishing determinant at a static reference that is separated from
+the contour by large fields. No conditional bound on the pair propagator across
+$\Gamma$ can then hold uniformly over the histories that the Gaussian law gives
+positive weight.
+\emph{Cut boundary hopping.} If the hopping across $\partial U_0$ is removed, the
+comparison with the decoupled trace costs an exponential in the boundary operator
+norm. Here $\|T_\partial\|\le4t\cdot 2|\partial_{\mathrm{out}}U_0|=8t|\partial_{\mathrm{out}}U_0|$,
+because each crossing bond carries one hopping term of norm at most $t$ per spin and
+each site of $\partial_{\mathrm{out}}U_0$ has at most four neighbours. The elementary
+trace comparison $\Tr e^{-\beta(H_0+H')}\le e^{\beta\|H'\|}\Tr e^{-\beta H_0}$ then
+charges at least $e^{8\beta t|\partial_{\mathrm{out}}U_0|}$. Any
+contour enclosing an $\ell^1$ ball of radius $M$ in $\mathbb{Z}^2$ has
+$|\partial_{\mathrm{out}}U_0|\ge4M$, since each of the four sides of the ball
+contributes at least $M+1$ sites. The price is therefore at least exponential in
+$8\beta tM$, which for $\tau\lesssim t$ grows faster in $M$ than any fixed-rate decay
+$e^{-\gamma M}$ the contour argument is meant to establish. The synthesis is that in
+two dimensions the cut price and the uncut determinant zero are dual: cutting the
+boundary moves the difficulty into the boundary norm, and keeping it moves the
+difficulty into the zeros.
+\end{remark}
+
+The static-gap hypothesis fixes the corner of parameter space in which the annealed
+estimate applies. The next proposition records the arithmetic of that corner.
+
+\begin{proposition}[Arithmetic of the corridor]
+\label{prop:collapse}
+Suppose $0<\kappa\le U/4$ and $0\le t\le\kappa/64$, so that $t\le U/256$. Then
+\begin{equation}
+\frac{2^{27}t^2}{U}\le2^{19}t,\qquad
+\min\Bigl(2^{10}t,\ \frac{2^{27}t^2}{U}\Bigr)\le2^{10}t .
+\label{eq:collapse}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Write $2^{27}t^2/U=2^{27}(t/U)\,t$ and use $t/U\le\kappa/(64U)\le2^{-8}$, which gives
+$2^{27}t^2/U\le2^{19}t$; the minimum of the two numbers is then at most $2^{10}t$.
+\end{proof}
+
+\begin{remark}[Where the corridor sits: a synthesis]
+\label{rem:corridor}
+Proposition~\ref{prop:collapse} is arithmetic and does not by itself exclude any
+regime. Read together with the released ceilings, it locates the annealed estimate.
+The corridor requires $t\le U/256$ and $\tau\le U/64$, so it is the strong-coupling
+corner. In that same corner the frequency-uniform results of
+Section~\ref{sec:survives} and of \cite{stage6} already cover every temperature at or
+above $\min(2^{10}t,\,2^{27}t^2/U)$, which by the proposition is at most $2^{10}t$, a
+fixed multiple of the hopping. Any ceiling proportional to $\Omega$ at fixed $t$ must
+therefore come from the adiabatic window $\tau\ll t$, and inside the corridor the
+frequency at the linear scale is at most $\Omega\le\tau\le U/64$.
+The corridor thus does not reach the window in which a linear ceiling is open unless a
+defect-suppression mechanism is found that does not require a static gap uniform in
+temperature. This paragraph is a synthesis of the arithmetic above with the cited
+ceilings, not an additional theorem, and no statement here excludes the annealed
+route.
+\end{remark}
+
 \section{Obstruction from positive Fermion determinants}
 \label{sec:det}
 
@@ -611,11 +1142,13 @@ determinant are together insufficient.
 \subsection{The oscillator sum rule, as a classical lemma}
 
 The following standard sum rule is quoted as a lemma because it delimits what a
-second-moment argument can do. It is the oscillator $f$-sum rule in imaginary
-frequency, and it holds unchanged in the interacting problem because the electronic
-operators commute with the oscillator coordinate.
+second-moment argument can do. It is the classical oscillator $f$-sum rule, written
+in imaginary frequency; nothing new is claimed for it, and the short proof is included
+only to fix notation and constants. The rule holds unchanged in the interacting
+problem because the electronic operators commute with the oscillator coordinate, so
+the double commutator that yields it is a c-number.
 
-\begin{lemma}[Interacting nonzero-Matsubara sum rule]
+\begin{lemma}[Classical oscillator $f$-sum rule, applied to the exact force]
 \label{lem:fsum}
 Let $x$ be any site of \eqref{eq:H} with force-scaled displacement
 $\psi_x=F_xX_x$, and let
@@ -632,7 +1165,12 @@ coefficients $\psi_{x,k}=\beta^{-1}\int_0^\beta\psi_x(u)e^{-i\nu_ku}du$,
 \sum_{k\ge1}\E|\psi_{x,k}|^2\le\frac{U_x\Omega_x^2}{24\,\tau},
 \label{eq:fsum2}
 \end{equation}
-and the constant is $1/12$ when both signs of $k$ are summed.
+and the constant is $1/12$ when both signs of $k$ are summed. This is the
+classical oscillator $f$-sum rule; the only interacting input is that the oscillator
+coordinate commutes with the remainder of $H_\Lambda$, so the force-force response
+takes the free-oscillator form at the exact frequency $\Omega_x$. It is quoted here
+because it is the one frequency-uniform ingredient that survives on both routes
+discussed above, and it is not a new claim.
 \end{lemma}
 
 \begin{proof}
@@ -1422,7 +1960,8 @@ $\Tlin=C(t,U)\Omega$ is proved or disproved. Theorems~\ref{thm:gc},
 \ref{thm:canon}, \ref{thm:min-att} and~\ref{thm:min-rep} extend the $\Ueff=0$
 high-temperature bound uniformly to all $\Ueff\in\R$ and supply explicit minimum
 ceilings for $\Ueff<0$ and half-filled $\Ueff>0$, whereas the obstructions of
-Sections~\ref{sec:cumulant} and~\ref{sec:det} and Theorem~\ref{thm:routes} remain
+Sections~\ref{sec:cumulant}, \ref{sec:annealed} and~\ref{sec:det}, and
+Theorem~\ref{thm:routes}, remain
 statements about specified classes of arguments, as spelled out in
 Remarks~\ref{rem:class}, \ref{rem:notclass} and~\ref{rem:smooth}.
 \item Theorems~\ref{thm:witness} and~\ref{thm:torus} concern a conditional coefficient,
@@ -1473,9 +2012,10 @@ with a controlled Born-Oppenheimer error expansion in $\Omega/t$. A finite dimer
 pair-order transition, and a crossover defined from a single observable cannot be
 relabelled $\Tpair$.
 \item \emph{Reflection and infrared arguments.} The free optical covariance carries no
-momentum-dependent stiffness, and ordinary spatial reflection positivity fails in
-balanced canonical Holstein sectors; grand-canonical or particle-hole modified
-reflections would need their own proof. A free Debye-Waller average cannot be factored
+momentum-dependent stiffness, and no reflection kernel written here is reflection
+positive on the geometries where a chessboard factorization would be used
+(Theorem~\ref{thm:rp}). A balanced canonical sector, or a particle-hole modified
+reflection, would need a kernel and a positivity proof of its own. A free Debye-Waller average cannot be factored
 out of an interacting Lang-Firsov trace.
 \item \emph{Intermediate and low-temperature regimes beyond the high-temperature and
 strong-coupling ceilings.} Theorems~\ref{thm:gc} and~\ref{thm:canon} stop at
@@ -1490,7 +2030,7 @@ $1024(|t|+\Gb)$ remains open.
 \section*{Acknowledgments and disclosures}
 
 AI agents generated the proofs, code and drafts under D. Rens' direction, and
-separate AI agents carried out the independent reviews.
+separate AI agents performed the independent reviews.
 
 This preprint has not been peer reviewed.
 
@@ -1503,7 +2043,9 @@ written independent implementation for each certificate, together with the
 fixed-parameter fixtures of Corollary~\ref{cor:fixture} and the finite-matrix
 diagnostics of the Remarks above. The finite-matrix and floating-point records
 are numerical sanity checks and are labelled as such; they are not part of any proof.
-The suite will be deposited as the replay supplement of this preprint, and no external
+The suite will be deposited as the replay supplement of this preprint, and its
+version 3 addition carries the annealed-route records of Section~\ref{sec:annealed},
+including the outward-rounded enclosures of the four reflection minors. No external
 data set is used anywhere in this work.
 
 \bibliographystyle{plain}
