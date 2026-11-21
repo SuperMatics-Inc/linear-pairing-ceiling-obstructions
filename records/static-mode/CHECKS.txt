@@ -1,0 +1,88 @@
+STATIC-MODE | 20 November 2026
+Status: proof draft, independent review pending.
+Exact-rational constant guards are exercised; finite-matrix computations are NUMERICAL.
+No PROVED or CERTIFIED label is claimed.
+
+Retained script:
+  D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.py
+
+1. Initial scientific replay (exit 1, retained failure)
+  UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with mpmath python -B D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.py > D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.stdout.txt 2> D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.stderr.txt
+  Wrapper observed REPLAY_EXIT_CODE=1.
+  Failed at the final HS Hessian absolute-error assertion (<2e-8).
+  Original outputs preserved as replay.initial.stdout.txt (empty) and replay.initial.stderr.txt.
+  This was an actual numerical-accuracy failure, not a scientific sign/factor failure.
+
+2. Targeted Hessian diagnostic (exit 0)
+  UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with mpmath python -B -c 'import importlib.util, numpy as np, math; spec=importlib.util.spec_from_file_location("replay", "D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.py"); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); h=np.array([[0.2,-0.7],[-0.7,-0.3]]); beta=2.; omega=.3; U=1.1; expected=sum(2*U*omega**2/((2*math.pi*n/beta)**2+omega**2)*m.susceptibility(h,beta,2*math.pi*n/beta).sum() for n in range(1,4)); print("expected",expected); exec("for step in [.01,.005,.0025]:\n actual=0.\n for n in range(1,4):\n  nu=2*math.pi*n/beta\n  var=2*U/beta*omega**2/(nu**2+omega**2)\n  for site in range(2):\n   for sine in [False,True]:\n    second=(m.determinant_ratio(h,beta,step,site,n,sine)+m.determinant_ratio(h,beta,-step,site,n,sine)-2)/step**2\n    actual+=var*second/2\n print(step,actual,actual-expected)")'
+  expected = 0.0014874704743052386
+  step 0.01:   error +3.2462733965798324e-9
+  step 0.005:  error -2.8626551075352363e-9
+  step 0.0025: error -2.8467067419253242e-8
+  Diagnosis: ODE integration error amplified by the inverse squared finite-difference step.
+  Fix: tighten DOP853 rtol from 2e-11 to 5e-14 and atol from 2e-12 to 1e-15.
+  The same physical formula, all three finite-difference steps, and the original assertions were retained.
+
+3. Corrected full scientific replay (exit 0)
+  UV_CACHE_DIR=D:/dev/.cache/uv uv run --no-project --with numpy --with scipy --with mpmath python -B D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.py > D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.stdout.txt 2> D:/dev/scratch/ceiling-20261118/MASSIVE/STATIC-MODE/replay.stderr.txt
+  Wrapper observed REPLAY_EXIT_CODE=0; stderr empty; 3.48 seconds.
+  The earlier stdout/stderr were renamed before this run, not erased.
+
+  Exact-rational guards:
+    positive integral polynomial identity giving pi<22/7;
+    (22/7)^2<10;
+    degree-four Taylor sum for exp(2)=7, positive tail giving tanh(1)>3/4;
+    (2/3)*4*(3/4)/(41*56)=1/1148>1/1200;
+    finite-embedding half constant 1/2400.
+  Independent mathematical review of those guards is not claimed.
+
+  High-precision numerical covariance q(a):
+    tested a=0.001,0.1,1,5; closed form versus mpmath nonzero-frequency sum;
+    q(a)<=a^2/12 checked at these inputs.
+  These are numerical sample checks; the all-a inequality is derived analytically.
+
+  Independent normalization checks:
+    one-spin susceptibility at first bosonic frequency: 0.03439121170075436;
+    direct time-domain integrals: 0.034391211700754376, 0.03439121170075437.
+    two-spin HS Hessian expected: 0.0014874704743052386;
+    absolute errors at steps 0.01,0.005,0.0025:
+      3.778638216992564e-9, 9.314418210251002e-10, 1.7016681553433388e-10.
+
+  Fixed t=U=1, tau/Omega=10, delta=4tau:
+    tau       Omega     endpoint a_x            a_x/(U Omega^2/tau^3)
+    0.2       0.02      7.506079504260876e-5     0.0015012159008521752
+    0.1       0.01      1.4730503911082875e-4    0.0014730503911082875
+    0.05      0.005     3.025141713128402e-4     0.0015125708565642008
+    0.02      0.002     7.670563267363336e-4     0.0015341126534726673
+    0.01      0.001     1.5376927642660266e-3    0.0015376927642660266
+    All analytical bridge eigenvalue formulas, one-mode lower bounds, and general upper bounds checked numerically.
+    The rigorous analytic upper bound on the omitted positive-frequency tail is displayed for each row in replay.stdout.txt.
+
+  L=4 square embedding, t=U=1, tau=0.1, Omega=0.01:
+    finite-barrier endpoint differences from the three-site value at B=100,1000,10000,100000:
+      5.491892404239825e-6, 6.882334248796494e-7,
+      7.02411255547352e-8, 7.038311033329744e-9.
+    Last conditional density: 0.12500767955976066.
+    No arbitrary-parameter barrier threshold was numerically certified.
+
+  Spectral commutator sum-rule maximum discrepancy: 3.863576125695545e-14.
+  Hopping-conservation upper bound also checked at the displayed finite square input.
+
+4. Owned temporary-directory cleanup (exit 0)
+  rmdir C:/t/StaticMode
+  Wrapper observed CLEANUP_EXIT_CODE=0.
+  Directory was empty; no temporary scripts remain.
+
+Earlier resumed-history exploratory inline calculations:
+  They were not retained as evidence or replay inputs because parts of their command text were elided in the archive and some used inconsistent Matsubara signs/spin factors. One exploratory Brillouin-zone command first exited 1 with a SyntaxError, then completed after correction but had the wrong susceptibility sign; its negative values are explicitly discarded. The retained replay re-derives the exact susceptibility, spin factor, and bridge witness independently. No archived numerical value is used to justify a constant or result here.
+
+Skipped/not run:
+  Independent mathematical review; interval certification of full finite-matrix arithmetic;
+  Lean/formal verification; repository tests, builds, lint, formatters, broad gates;
+  paper acquisition or literature priority audit; TeX/PDF build;
+  full annealed Gibbs calculation, dynamic-mode Monte Carlo, canonical thermodynamic transfer.
+  No cloud scientific compute, paid compute jobs, publication, deployment, push, merge, branch or commit.
+
+Scientific outcome:
+  Proof draft of a local first-cumulant obstruction to unresummed absolute small-activity expansions uniform in every static real W.
+  No new T_pair ceiling; no nonconvergence theorem for all expansions; no obstruction to annealed/resummed proofs or the physical target.

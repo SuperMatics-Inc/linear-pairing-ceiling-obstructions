@@ -1,0 +1,102 @@
+name: replay-and-paper
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source manifest
+        run: |
+          set -euo pipefail
+          sha256sum -c MANIFEST.sha256
+          sha256sum -c ADMITTED.sha256
+          test "$(wc -l < MANIFEST.sha256)" = "$(wc -l < ADMITTED.sha256)"
+          total=$(find . -type f -not -path './.git/*' | wc -l)
+          test $((total - 2)) -eq "$(wc -l < MANIFEST.sha256)"
+      - name: Install pinned replay dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.5.5 scipy==1.18.1 sympy==1.14.0 mpmath==1.4.1 python-flint==0.9.0
+      - name: Static-mode cumulant replay
+        working-directory: records/static-mode
+        run: |
+          set -euo pipefail
+          python -B replay.py | tee replay.out
+          grep -qF '"coefficient_majorized_from_below": "1/1148"' replay.out
+          grep -qF '"bridge_constant": "1/1200"' replay.out
+          grep -qF '"embedded_constant": "1/2400"' replay.out
+          grep -qF '"sum_rule_max_error": 3.863576125695545e-14' replay.out
+      - name: Linear-fresh fixtures, mutants and independent implementation
+        working-directory: records/linear-fresh
+        run: |
+          set -euo pipefail
+          python -B replay.py | tee replay.out
+          grep -qF 'LINEAR-FRESH replay: ALL FIXTURE CHECKS PASSED; NO PAIRING CEILING CERTIFIED' replay.out
+          grep -qF 'auxiliary series in (67/50, 27/20) CERTIFIED, not a ceiling coefficient' replay.out
+          python -B replay.py --all-mutants | tee mutants.out
+          grep -qF 'ALL 16 GUARDED MUTANTS REJECTED' mutants.out
+          python -B independent.py | tee independent.out
+          grep -qF 'ALL INDEPENDENT CHECKS PASSED' independent.out
+      - name: Pure-SSH replay, mutants and exact diagonalisation
+        working-directory: records/puressh
+        run: |
+          set -euo pipefail
+          python -B replay.py | tee replay.out
+          grep -qF 'ALL EXACT RATIONAL AND OUTWARD INTERVAL CHECKS PASSED' replay.out
+          grep -qF 'R_max    = 24718511/9834543 < 3' replay.out
+          python -B replay.py --all-mutants | tee mutants.out
+          grep -qF 'ALL 12 MATHEMATICAL MUTANTS REJECTED' mutants.out
+          python -B ed_check.py | tee ed.out
+          grep -qF 'ALL NUMERICAL ED CHECKS PASSED' ed.out
+      - name: Public prose safeguards
+        run: |
+          set -euo pipefail
+          if grep -nE '—|–|\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' paper/main.tex README.md; then exit 1; fi
+          grep -qF 'This preprint has not been peer reviewed.' paper/main.tex
+          grep -qF 'This preprint has not been peer reviewed.' README.md
+          grep -qF '10.5281/zenodo.24408871' paper/main.tex
+          grep -qF '10.5281/zenodo.24408875' paper/main.tex
+          grep -qF 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions' paper/main.tex
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_DATE_EPOCH: "1795132800"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tectonic and poppler
+        run: |
+          set -euo pipefail
+          curl -fsSL https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-x86_64-unknown-linux-gnu.tar.gz | sudo tar -xz -C /usr/local/bin
+          tectonic --version
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+      - name: Build the manuscript
+        working-directory: paper
+        run: |
+          set -euo pipefail
+          tectonic --keep-logs main.tex
+          if grep -nE 'Overfull|Underfull|Undefined|Citation.*undefined|There were undefined' main.log; then exit 1; fi
+          test -s main.pdf
+          pdfinfo -url main.pdf > urls.txt
+          grep -qF 'https://doi.org/10.5281/zenodo.24408871' urls.txt
+          grep -qF 'https://doi.org/10.5281/zenodo.24408875' urls.txt
+          grep -qF 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions' urls.txt
+          pdftotext main.pdf main.txt
+          if grep -nE '—|–|\b(BARRIERS2|ADIABATIC|PURESSH|STATIC-MODE|LINEAR-FRESH|SSHBOUND3|EXTHOL|HUBHOL|UNIV-GLUE|MASSIVE)[[:alnum:]_-]*|ceiling-20261118|D:/|C:/t|\bMac\b|\blane\b|reserved DOI|awaits review' main.txt; then exit 1; fi
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'This preprint has not been peer reviewed.'
+          tr -s '[:space:]' ' ' < main.txt | grep -qF 'separate AI agents carried out the independent reviews.'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linear-pairing-ceiling-obstructions-paper
+          path: |
+            paper/main.pdf
+            paper/main.log
+            paper/main.tex
+            paper/refs.bib
+            paper/urls.txt
+          if-no-files-found: error

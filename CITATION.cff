@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: Please cite the preprint and this software supplement.
+type: software
+title: Replay, proof and review records for Method obstructions to linear-in-frequency pairing ceilings in electron-phonon models
+version: 1.0.0
+license: Apache-2.0
+authors:
+  - family-names: Rens
+    given-names: Davis
+    affiliation: SuperMatics Inc.
+    orcid: 'https://orcid.org/0000-0001-5839-5197'
+doi: 10.5281/zenodo.24408875
+repository-code: 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions'
+preferred-citation:
+  type: article
+  title: 'Method obstructions to linear-in-frequency pairing ceilings in electron-phonon models: integrated cumulants, positive determinants, and the vanishing effective attraction'
+  authors:
+    - family-names: Rens
+      given-names: Davis
+      affiliation: SuperMatics Inc.
+      orcid: 'https://orcid.org/0000-0001-5839-5197'
+  doi: 10.5281/zenodo.24408871
+  year: 2026

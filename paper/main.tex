@@ -1,0 +1,1245 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{array}
+\newcommand{\DOI}[1]{\mbox{\href{https://doi.org/#1}{\nolinkurl{#1}}}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diag}{diag}
+
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\eff}{\mathrm{eff}}
+\newcommand{\pair}{\mathrm{pair}}
+\newcommand{\Ggreen}{\mathcal{G}}
+\newcommand{\Tpair}{T_{\pair}}
+\newcommand{\Tlin}{T_{\mathrm{lin}}}
+\newcommand{\Gb}{G_{\mathrm{b}}}
+\newcommand{\Ueff}{U_{\eff}}
+\emergencystretch=1.5em
+\title{Method obstructions to linear-in-frequency pairing ceilings in
+electron-phonon models: integrated cumulants, positive determinants, and the
+vanishing effective attraction}
+\author{Davis Rens\\SuperMatics Inc.\\\href{https://orcid.org/0000-0001-5839-5197}{ORCID 0000-0001-5839-5197}}
+\date{}
+\newcommand{\PAPERDOI}{10.5281/zenodo.24408871}
+\newcommand{\SUPPDOI}{10.5281/zenodo.24408875}
+\newcommand{\REPOURL}{https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions}
+\begin{document}
+\maketitle
+
+\begin{center}
+\small
+Article DOI: \DOI{\PAPERDOI}\\
+Supplement DOI: \DOI{\SUPPDOI}\\
+Source repository: \url{\REPOURL}
+\end{center}
+
+\begin{abstract}
+Can the pair-ordering temperature of a Holstein or bond-SSH electron-phonon model
+be bounded at a temperature scale proportional to the phonon frequency, uniformly
+in that frequency and at fixed hopping and coupling? That linear step remains open,
+and this note does not close it. It records three exact obstructions that identify
+which proof methods cannot reach it, together with one case where a
+frequency-uniform ceiling does survive. First, for the Holstein model with
+arbitrary real static site fields, the exact first coefficient of the local
+dynamic cumulant, computed with the dynamic Gaussian already integrated out,
+is at least $U\Omega^2/(1200\tau^3)$ on an open three-site path for
+$0<\Omega\le\tau\le t/4$, and at least $U\Omega^2/(2400\tau^3)$ on every square
+torus of side at least four with a finite static barrier. At $\tau=C\Omega$ this
+diverges as $\Omega\downarrow0$, so no expansion whose uniform local activity must
+dominate it can stay small. Second, a strictly positive single-impurity
+determinant does not bound the impurity propagator: on a two-slice history the
+Fermion determinant exceeds one, all monodromy eigenvalues are positive, and the
+conditional Green function grows as $B^2/(2v^2)$. An interval-certified fixture at
+$B=6$, $v=1/2$ gives $\det(1+U)>15$ and $|\Ggreen(1,0)_{00}|>52.89$. Third, for the
+pure bond-SSH model with vanishing effective attraction the high-temperature
+regime is closed: for $\beta|t|+\beta\Gb\le2^{-10}$ the pair correlator is at most
+$(341/103)(32/341)^{d}$, uniformly in frequency, chemical potential and density, so
+$k_B\Tpair\le1024(|t|+\Gb)$, and three further proof routes are obstructed by exact
+identities. Nothing here is a bound on a measured transition temperature, and no
+materials claim is made.
+\end{abstract}
+
+\section{Question, scope, and prior work}
+
+We study the spinful Holstein and bond-SSH models on square tori, at fixed
+nearest-neighbour hopping $t>0$, fixed electron-phonon coupling, fixed density or
+chemical potential, and phonon frequency $\Omega>0$. In the Holstein case each site
+carries an independent harmonic oscillator whose displacement couples linearly to
+the local density, with relaxation energy $U>0$. In the bond-SSH case each
+nearest-neighbour bond carries an independent oscillator whose displacement
+modulates the bond hopping amplitude, with bond relaxation energy $\Gb=g^2/K$ and
+vanishing local attraction. Units are $k_B=\hbar=1$, with $\tau=\beta^{-1}=k_BT$
+written as an energy; physical temperatures are restored only when a model scale is
+compared with $k_BT$.
+
+The question that this series of notes addresses is the following. At fixed $t$ and
+fixed coupling, and at regular density, can one bound pair correlations at a
+temperature scale proportional to the phonon frequency, uniformly in
+$\Omega\downarrow0$? A positive answer would be a pair ceiling of the form
+$k_B\Tpair\le C(t,U)\,\Omega$ with $C$ independent of $\Omega$. Proof proposals for
+that linear scale are numerous, and several weaker ceilings are established:
+frequency-uniform bounds at a constant temperature scale in the strong-coupling
+regime \cite{stage6}, a two-thirds-power adiabatic bound and its sharpness
+\cite{linear4,linear5}, slow-phonon estimates \cite{slow}, an explicit pair bound
+for the attractive Hubbard model with bond SSH coupling \cite{sshbond3}, method
+obstructions from single-spin determinant zeros \cite{barriers}, and limits of
+defect-insertion arguments \cite{limits}.
+
+This note is the second collection of method obstructions in that programme. The
+first \cite{barriers} studied determinant zeros of single-spin propagators and the
+limits of specified cutoff and twist families. The present note adds three further
+obstructions of a different character, and one positive result.
+
+\begin{enumerate}[label=(\Alph*),leftmargin=2.2em]
+\item The dynamic Gaussian can be integrated out first, around the strictly
+positive static free-fermion trace, with no static conditioning and no determinant
+zero. Even then, the exact first local dynamic cumulant is not uniformly small at a
+linear temperature scale: an explicit three-site static field at fixed bare hopping
+produces a resonance whose contribution is $\Theta(U\Omega^2/\tau^3)$. This blocks
+unresummed expansions about the static reference whose local activity must dominate
+that cumulant (Section~\ref{sec:cumulant}).
+\item A positive Fermion determinant, even together with positive monodromy
+eigenvalues, does not bound a conditional impurity Green function. An exact
+two-slice family gives $\det(1+U)>1$ and $|\Ggreen(1,0)_{00}|\sim B^2/(2v^2)$, so no
+pathwise history-independent propagator bound follows from determinant positivity
+alone (Section~\ref{sec:det}).
+\item For the pure bond-SSH model at $\Ueff=0$, the high-temperature regime is
+closed by a frequency-uniform polymer expansion, and three further routes are
+obstructed by exact identities: no phonon-induced instantaneous atomic gap, a
+non-terminating bond Lang-Firsov expansion, and free-fermion algebraic decay that
+forbids any hopping-uniform exponential clustering (Section~\ref{sec:survives}).
+\end{enumerate}
+
+None of these statements is a physical counterexample. Each is a statement about a
+precisely described class of arguments applied to a precisely described model
+quantity. In particular, none of them shows that $\Tpair/\Omega$ can diverge, and
+none shows that a linear ceiling is false. The linear step remains open, and
+Section~\ref{sec:open} lists what is missing.
+
+Section~\ref{sec:model} fixes the models and defines the model quantity
+$\Tpair$ that every result in this note concerns. Sections~\ref{sec:cumulant},
+\ref{sec:det} and \ref{sec:survives} contain the results.
+Section~\ref{sec:notclaimed} states what is not claimed, and
+Section~\ref{sec:open} lists open problems.
+
+\section{Models, notation, and the shape of a linear ceiling}
+\label{sec:model}
+
+\subsection{The Holstein model}
+
+Let $\Lambda_L=(\mathbb{Z}/L\mathbb{Z})^2$ be a square torus of side $L\ge4$ with
+nearest-neighbour edge set $\mathcal{E}_\Lambda$ and graph distance $d$. Fermion
+operators $c_{x\sigma}$ carry spin $\sigma\in\{\uparrow,\downarrow\}$, and
+$n_{x\sigma}=c_{x\sigma}^\dagger c_{x\sigma}$, $n_x=n_{x\uparrow}+n_{x\downarrow}$,
+$\Delta_x=c_{x\downarrow}c_{x\uparrow}$. Each site carries a coordinate $X_x$ and
+momentum $P_x$ with $[X_x,P_{x'}]=i\delta_{xx'}$, mass $M_x$, spring constant
+$K_x>0$ and frequency $\Omega_x=\sqrt{K_x/M_x}$. With a linear force constant
+$F_x>0$, the Hamiltonian is
+\begin{equation}
+H_\Lambda=H_{\mathrm{el}}+\sum_{x\in\Lambda_L}\left(\frac{P_x^2}{2M_x}
++\frac{K_x}{2}X_x^2+F_xX_x\,(n_x-1)\right)-t\sum_{\langle xy\rangle,\sigma}
+\left(c_{x\sigma}^\dagger c_{y\sigma}+c_{y\sigma}^\dagger c_{x\sigma}\right),
+\label{eq:H}
+\end{equation}
+where the electronic part may also contain an arbitrary real static site field
+$W_x$ (including the chemical potential). Two normalisations are useful and we use
+both:
+\begin{equation}
+U_x:=\frac{F_x^2}{K_x},\qquad
+F_xX_x=G_x\,b_x,\quad b_x=a_x+a_x^\dagger,\quad G_x=\sqrt{\frac{U_x\Omega_x}{2}}.
+\label{eq:U}
+\end{equation}
+Thus $U_x$ is the site relaxation energy and $G_x$ is the boson-operator coupling of
+the site, with $G_x^2=U_x\Omega_x/2$. The double commutator of the force-scaled
+displacement with the Hamiltonian is
+\begin{equation}
+\bigl[F_xX_x,[H_\Lambda,F_xX_x]\bigr]=\frac{F_x^2}{M_x}=U_x\Omega_x^2 .
+\label{eq:dcomm}
+\end{equation}
+Where a single coupling is quoted we write $U=F^2/K$ and $G^2=U\Omega/2$ for a
+uniform model. Earlier notes
+in this series sometimes write the site coupling as $U=g^2/K$; that lowercase $g$ is
+the force constant $F$ of \eqref{eq:H}, while here lowercase $g$ is reserved for the
+bond force constant of the Peierls model \eqref{eq:Hssh}. The mass $M_x$ and the
+spring constant $K_x$ enter the proofs only through $\Omega_x$ and $U_x$.
+
+\subsection{The pure bond-SSH model}
+
+For the bond-SSH model each bond $b=\{x,y\}\in\mathcal{E}_\Lambda$ carries
+$X_b,P_b$ with mass $M$, spring constant $K>0$ and $\Omega=\sqrt{K/M}$, and
+\begin{equation}
+H_\Lambda=-\mu N-t\sum_{b\in\mathcal{E}_\Lambda}T_b
++g\sum_{b\in\mathcal{E}_\Lambda}X_bT_b+\sum_{b\in\mathcal{E}_\Lambda}
+\left(\frac{P_b^2}{2M}+\frac{K}{2}X_b^2\right),\qquad
+T_b=\sum_\sigma\left(c_{x\sigma}^\dagger c_{y\sigma}+c_{y\sigma}^\dagger
+c_{x\sigma}\right),
+\label{eq:Hssh}
+\end{equation}
+so that the local effective attraction is $\Ueff=0$ and the only coupling is the
+Peierls one. We write
+\begin{equation}
+\Gb:=\frac{g^2}{K}
+\label{eq:Gb}
+\end{equation}
+for the bond relaxation energy. Here $g$ is a bond force constant and must not be
+confused with the site value $G_x$ of \eqref{eq:U}; when both models appear in one
+sentence we write the Holstein site coupling out in full. The proved pair bound of
+\cite{sshbond3} for the attractive Hubbard model with bond SSH coupling assumes
+$\beta t^2/\Ueff\le2^{-27}$ together with $\beta\Gb\le2^{-13}$, with prefactor
+$1965840/475579$ and decay base $48645/524224$. At $\Ueff=0$ and $t>0$ that first
+hypothesis cannot hold, which is the case that Section~\ref{sec:survives} closes.
+
+\subsection{The model quantity \texorpdfstring{$\Tpair$}{T\_pair}}
+
+Every result in this note concerns the following model quantity and never a measured
+transition temperature.
+
+\begin{definition}[pair-decay temperature]
+\label{def:tpair}
+Fix $t$, the coupling parameters and $\Omega$. Let $\mathcal{Q}$ be the set of
+temperatures $T>0$ for which there exist constants $A=A(t,\text{coupling},T)<\infty$
+and $q=q(t,\text{coupling},T)<1$, independent of $L\ge4$ and of the chemical
+potential, such that
+\begin{equation}
+\left|\langle\Delta_x^\dagger\Delta_y\rangle_{\Lambda_L}\right|\le A\,q^{d(x,y)}
+\label{eq:clustering}
+\end{equation}
+holds for every $L\ge4$, every $\mu$, and all distinct $x,y\in\Lambda_L$, in the
+grand-canonical state at inverse temperature $\beta=1/T$. Set
+$\Tpair:=\inf\mathcal{Q}$.
+\end{definition}
+
+\begin{remark}
+A linear ceiling is the assertion $k_B\Tpair\le C(t,U)\,\Omega$ with $C$ independent
+of $\Omega$, that is, exponential decay of \eqref{eq:clustering} for every temperature
+above a scale proportional to the frequency. Write $\Tlin=C(t,U)\Omega$. An
+$\Omega$-uniform ceiling of the form $k_B\Tpair\le C(t,U)$ with $C$ not vanishing as
+$\Omega\downarrow0$ is a different statement: it says nothing at the scale $\Tlin$,
+and in particular does not imply a linear ceiling. The results of
+Section~\ref{sec:survives} are of the second type.
+\end{remark}
+
+\subsection{The route classes examined here}
+
+Four families of argument have been proposed for the linear scale. Their current
+status in this programme is summarised in Table~\ref{tab:routes}; the new content of
+this note is the entries marked with a reference to the sections below.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.37\linewidth}@{}}
+\hline
+Route & Obstruction & Established here \\
+\hline
+Condition on static fields, then expand the integrated dynamic Gaussian &
+Exact first cumulant is $\Theta(U\Omega^2/\tau^3)$ at fixed hopping &
+Theorems~\ref{thm:witness} and~\ref{thm:torus}, Section~\ref{sec:cumulant} \\
+\hline
+Per-history determinant positivity or nonvanishing, giving a uniform propagator
+bound & Positive determinant with arbitrary conditional amplification &
+Theorem~\ref{thm:amp}, Corollary~\ref{cor:fixture}, Section~\ref{sec:det} \\
+\hline
+Ward identities and Schur leakages on the Matsubara grid & Threshold algebra at
+$\alpha=1$, diagonal versus operator norm & Remarks~\ref{rem:ward} and
+\ref{rem:dimer}, Section~\ref{sec:det} \\
+\hline
+High-temperature polymer or cluster expansion at $\Ueff=0$ & Not an obstruction;
+the route closes & Theorems~\ref{thm:gc} and~\ref{thm:canon},
+Section~\ref{sec:survives} \\
+\hline
+Phonon-induced gap, bond Lang-Firsov, hopping-uniform clustering at $\Ueff=0$ &
+Exact identities & Theorem~\ref{thm:routes}, Section~\ref{sec:survives} \\
+\hline
+\end{tabular}
+\caption{Status of four route families. Each obstruction is scoped to the stated
+class of arguments.}
+\label{tab:routes}
+\end{table}
+
+\section{Obstruction from the integrated first dynamic cumulant}
+\label{sec:cumulant}
+
+In this section the electronic part of \eqref{eq:H} is the free tight-binding
+operator with an arbitrary real static field, and the phonon-mediated interaction is
+kept in its exact dynamic form. The route examined here conditions on every static
+site field $W$, uses the positive static free-fermion trace as reference, and then
+expands the Gaussian-integrated nonzero-Matsubara part of the interaction. Because
+the static reference is strictly positive, this route survives all determinant
+worries; the question is whether the first coefficient of the expansion is
+uniformly small at a linear temperature scale.
+
+\subsection{Setup and the exact first coefficient}
+
+Fix $\tau=\beta^{-1}$ and $\Omega>0$, set $\nu_n=2\pi n/\beta$ and let
+$h_W=-tA+\diag(W)$ be the static one-particle matrix, with $A$ the adjacency matrix of
+$\Lambda_L$. Two identical, independent spin sectors are present at fixed $W$. For a
+mean-zero real Gaussian field $v$ with the thermal covariance of the dynamic part of
+the interaction,
+\begin{equation}
+D_{\mathrm{dyn}}(u)=\frac{U}{\beta}\sum_{n\ne0}r_n e^{i\nu_nu},\qquad
+r_n=\frac{\Omega^2}{\nu_n^2+\Omega^2},
+\label{eq:cov}
+\end{equation}
+define the two-spin partition-function ratio obtained by multiplying the
+Gaussian-integrated nonzero-mode interaction by $s$,
+\begin{equation}
+R_W(s)=\frac{\E_v\Tr_{\mathrm{Fock}}\,T
+\exp\!\left[-\int_0^\beta\!\left(H_W+\sqrt{s}\sum_xv_x(u)n_x\right)du\right]}
+{\Tr_{\mathrm{Fock}}e^{-\beta H_W}} .
+\label{eq:RW}
+\end{equation}
+The denominator is strictly positive and $R_W(0)=1$, so the first coefficient of
+$R_W$ equals the first coefficient of $\log R_W$. Both are written
+$\sum_xa_x(W)$. Using the force-scaled field $v_x=F_xX_x$, the covariance
+\eqref{eq:cov} is exactly the thermal covariance of that field, with
+$U_x=F_x^2/K_x$; replacing $n_x$ by $n_x-1$ changes nothing because $D_{\mathrm{dyn}}$
+has zero time integral.
+
+\begin{lemma}[Exact first coefficient, no truncation]
+\label{lem:first}
+For every finite volume, every real static field $W$, every $t,\beta,\Omega>0$ and
+every site $x$,
+\begin{equation}
+a_x(W)=2U\sum_{n\ge1}r_n\sum_{a,b}p_a(x)p_b(x)\,
+\frac{\bigl[f(e_a)-f(e_b)\bigr](e_b-e_a)}
+{\nu_n^2+(e_b-e_a)^2},
+\label{eq:first}
+\end{equation}
+where $h_W\psi_a=e_a\psi_a$, $p_a(x)=|\psi_a(x)|^2$, the sum over $(a,b)$ is over
+ordered eigenstate pairs, and $f(e)=(1+e^{\beta e})^{-1}$. Every summand in
+\eqref{eq:first} is nonnegative and diagonal pairs contribute zero.
+\end{lemma}
+
+\begin{proof}
+Expand the exponential in \eqref{eq:RW} to second order in $\sqrt{s}$ and apply
+Gaussian Wick, which is legitimate at finite volume because $\int|v|$ has Gaussian
+exponential moments and the electronic traces are finite dimensional. The
+second-order term of $R_W$ is
+\begin{equation}
+\frac12\sum_x\int_0^\beta\!\!\int_0^\beta du\,du'\,
+D_{\mathrm{dyn}}(u-u')\bigl\langle T\,n_x(u)n_x(u')\bigr\rangle_W .
+\label{eq:second}
+\end{equation}
+The disconnected part $\langle n_x\rangle\langle n_x\rangle$ is independent of both
+times and vanishes because $D_{\mathrm{dyn}}$ has zero integral. The two spin sectors
+are independent, so cross-spin connected terms vanish and the two same-spin terms
+cancel the prefactor $1/2$. For one spin, the connected density correlation in the
+static reference is
+\begin{equation}
+K_x(u)=\sum_{a,b}p_a(x)p_b(x)f(e_a)\bigl[1-f(e_b)\bigr]e^{u(e_a-e_b)},\qquad
+0<u<\beta .
+\label{eq:Kx}
+\end{equation}
+Its spectral representation
+$\chi_x(i\nu)=\sum_{a,b}p_ap_b[f(e_a)-f(e_b)](e_b-e_a)/[\nu^2+(e_b-e_a)^2]$ follows
+by direct time integration and by pairing $(a,b)$ with $(b,a)$; at nonzero integer
+frequencies $\int_0^\beta e^{i\nu(u-u')}du\,du'$ collapses the double time integral
+onto $\beta\delta_{\nu_k,\nu_m}$, which cancels the $\beta^{-1}$ in \eqref{eq:cov} and
+leaves the factor $U$. Summing over both signs of the bosonic frequency, using
+$\chi_x(i\nu)=\chi_x(-i\nu)$, gives \eqref{eq:first}. Positivity is the statement
+that $f$ is decreasing: for $e_a<e_b$ the numerator
+$[f(e_a)-f(e_b)](e_b-e_a)$ is a positive square divided by a positive difference, and
+for equal energies it vanishes.
+\end{proof}
+
+\begin{lemma}[Auxiliary bounds]
+\label{lem:aux}
+Set $q(a)=\sum_{n\ne0}a^2/[(2\pi n)^2+a^2]$ and let $d_x$ be the degree of $x$ in
+$\Lambda_L$. Then for every real $W$ and every $\Omega>0$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $q(a)\le a^2/12$, $\chi_x(i\nu)\le\beta/4$, and
+$a_x(W)\le U\Omega^2\beta^3/48$;
+\item $\sum_{a,b}p_a(x)p_b(x)(e_b-e_a)^2=2t^2d_x$ and
+$a_x(W)\le d_xt^2U\Omega^2\beta^5/1440$;
+\item for distinct $x,y$ and $\alpha=(1+16\beta t)^{-1}$,
+$\bigl|\langle\Delta_x^\dagger\Delta_y\rangle_W\bigr|
+\le(25/16)e^{-2\alpha\,d(x,y)}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Since $a^2/[(2\pi n)^2+a^2]\le a^2/(4\pi^2n^2)$ and $\sum_{n\ne0}n^{-2}=\pi^2/3$,
+we get $q(a)\le a^2/12$. For the second claim, write $z=e_b-e_a$ and use the mean
+value theorem, $(f(e_a)-f(e_b))/(e_b-e_a)=-f'(\xi)\le\beta/4$ together with
+$z^2/(\nu^2+z^2)\le1$ and $\sum_{a,b}p_ap_b=1$. Then
+$a_x\le(\beta U/4)q(\beta\Omega)\le U\Omega^2\beta^3/48$.
+
+(ii) The spectral variance identity holds because the left side is the variance of
+$h_W$ in the site state $|x\rangle$: it equals
+$2[(h_W^2)_{xx}-(h_W)_{xx}^2]=2\sum_{y}|(h_W)_{xy}|^2=2t^2d_x$. Since
+$z^2/(\nu^2+z^2)\le z^2/\nu^2$, we get $\chi_x(i\nu)\le\beta d_xt^2/(2\nu^2)$, and
+$\sum_{n\ne0}\nu_n^{-4}=\beta^4/720$ together with $r_n\le1$ gives the bound.
+
+(iii) Conjugate the hopping by the diagonal multiplication operator
+$\exp(\alpha\,d(\,\cdot\,,\text{anchor}))$. The conjugated hopping differs from $h_W$
+by a perturbation $P$ with Schur norm at most $4t(e^{\alpha}-1)\le8t\alpha\le
+1/(2\beta)$. At each fermionic frequency $\omega_k=(2k+1)\pi/\beta$ the unweighted
+inverse of $i\omega_k-h_W$ has norm at most $1/|\omega_k|$ by the spectral theorem,
+and the difference of the two inverses is at most $2\|P\|/|\omega_k|^2$, so the
+difference series converges absolutely because the identity jumps cancel. With
+$\sum_k\omega_k^{-2}=\beta^2/4$ the static slice norm after conjugation is at most
+$1+\beta\|P\|/2\le5/4$, and Wick factorisation of the static pair correlator,
+$\langle\Delta_x^\dagger\Delta_y\rangle_W=f(h_W)_{xy}^2$, gives
+\eqref{eq:clustering} with the stated constant after undoing the conjugation.
+\end{proof}
+
+\begin{remark}
+The static reference is therefore not where the difficulty lies: item (iii) gives
+uniform exponential decay of the static pair correlator at every fixed positive
+temperature and for every real field, so any annealed average over static fields
+inherits it. Bounds (i) and (ii) also show that the exact first cumulant is always of
+order at most $U\Omega^2\beta^3/48$; the next theorem shows that this worst-case
+order is attained, at fixed hopping, for a field profile that is not exotic.
+\end{remark}
+
+\subsection{The three-site witness}
+
+\begin{theorem}[Fixed-hopping resonance]
+\label{thm:witness}
+Use the open three-site path $\{$left, middle, right$\}$ with hopping $-t$ and real
+fields
+\begin{equation}
+W_{\mathrm{left}}=W_{\mathrm{right}}=\tfrac{\delta}{2},\qquad
+W_{\mathrm{middle}}=-\tfrac{\delta}{2}+\frac{2t^2}{\delta},\qquad \delta>0 .
+\label{eq:fields3}
+\end{equation}
+For every $t,U>0$ and every $0<\Omega\le\tau\le t/4$,
+\begin{equation}
+a_{\mathrm{left}}(W)\ \ge\ \frac{U\Omega^2}{1200\,\tau^3},
+\label{eq:witness}
+\end{equation}
+and the same holds at the right endpoint.
+\end{theorem}
+
+\begin{proof}
+The one-particle matrix in the site basis takes the values
+$h_3=\tfrac{\delta}{2}$ at the two end sites,
+$-\tfrac{\delta}{2}+2t^2/\delta$ at the middle site, and $-t$ on both bonds. Its
+antisymmetric vector $(1,0,-1)/\sqrt2$ is an eigenvector with energy $e_+=\delta/2$
+and endpoint weight $p_+(\mathrm{left})=1/2$. On
+$\mathrm{span}\{(1,0,1)/\sqrt2,(0,1,0)\}$ the remaining block has trace
+$2t^2/\delta$ and determinant $-\delta^2/4-t^2$, hence eigenvalues
+$e_-=-\delta/2$ and $e_{\mathrm{high}}=\delta/2+2t^2/\delta$; the amplitude ratio of
+the middle component to the symmetric endpoint component at energy $e_-$ is
+$\delta/(\sqrt2\,t)$, so the endpoint weight is
+\begin{equation}
+p_-(\mathrm{left})=\frac{A}{2},\qquad
+A=\left(1+\frac{\delta^2}{2t^2}\right)^{-1}.
+\label{eq:Aweight}
+\end{equation}
+The eigenvalue separation of the two low states is exactly $\delta$, arbitrarily
+small at fixed bare hopping, because increasing the middle barrier $2t^2/\delta$
+pays for it.
+
+Keep in \eqref{eq:first} only $n=1$ and the two ordered low-state pairs
+$(-,+)$ and $(+,-)$. Their Fermi difference is $\tanh(\beta\delta/4)$ and their
+ordered weight products sum to $A/2$, so every retained term is nonnegative and
+\begin{equation}
+a_{\mathrm{left}}\ge\frac{UA\,\Omega^2\,\delta\tanh(\beta\delta/4)}
+{(4\pi^2\tau^2+\Omega^2)\,(4\pi^2\tau^2+\delta^2)} .
+\label{eq:witnessgeneral}
+\end{equation}
+Now set $\delta=4\tau$. For $\Omega\le\tau\le t/4$ we have $\delta\le t$, hence
+$A\ge2/3$, and $\tanh(1)>3/4$, and $\pi^2<10$, so the right side of
+\eqref{eq:witnessgeneral} is bounded below by
+\begin{equation}
+\frac{(2/3)\cdot4\cdot(3/4)}{(40+1)(40+16)}\cdot\frac{U\Omega^2}{\tau^3}
+=\frac{1}{1148}\cdot\frac{U\Omega^2}{\tau^3}
+>\frac{1}{1200}\cdot\frac{U\Omega^2}{\tau^3}.
+\label{eq:constant}
+\end{equation}
+The constants used are elementary and exact: the identity
+$\int_0^1x^4(1-x)^4/(1+x^2)dx=22/7-\pi$ with a positive integrand gives $\pi<22/7$,
+hence $\pi^2<(22/7)^2<10$, and the Taylor terms of $e^2$ through degree four sum to
+$7$ with a strictly positive remainder, giving $\tanh(1)>3/4$. The arithmetic
+$(2/3)\cdot4\cdot(3/4)/(41\cdot56)=1/1148>1/1200$ is exact in rational arithmetic.
+\end{proof}
+
+\begin{theorem}[Embedding on every square torus]
+\label{thm:torus}
+Fix $L\ge4$, $t,U>0$, $0<\Omega\le\tau\le t/4$. Let the three collinear torus
+sites $(0,0),(0,1),(0,2)$ carry the fields $\delta=4\tau$ of \eqref{eq:fields3} with
+$\delta/2=2\tau$ and middle field $t^2/(2\tau)-2\tau$, and let every other site carry
+the same real field $B>0$. The bare hopping is unchanged on every torus edge,
+including edges into the barrier region, and no bond is deleted. Then there is a
+finite $B_0=B_0(L,t,\tau,\Omega)$ such that for every $B\ge B_0$
+\begin{equation}
+a_{(0,0)}(W_B)\ \ge\ \frac{U\Omega^2}{2400\,\tau^3}.
+\label{eq:torus}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The three chosen sites induce the open path, including at $L=4$, since the two
+endpoints $(0,0)$ and $(0,2)$ are at graph distance $2$. Write the static matrix in
+path/complement block form
+$h_B=\begin{pmatrix}h_3&V\\ V^*&BI-tA_{\mathrm{c}}\end{pmatrix}$, where
+$A_{\mathrm{c}}$ is the adjacency matrix of the complement of the three sites. The
+complement spectrum is at least $B-4t$, and $\|V\|\le\sqrt6\,t<4t$. For fixed finite
+$L,t,\tau,\Omega$ the low-sector Schur complement
+\begin{equation}
+S(B,z)=h_3-z-V\bigl(BI-tA_{\mathrm{c}}-z\bigr)^{-1}V^*
+\label{eq:schur}
+\end{equation}
+converges uniformly to $h_3-z$ on any compact set of $z$ away from the three simple
+eigenvalues of $h_3$. The inverse of \eqref{eq:schur} is the upper-left $3\times3$
+block $[(h_B-z)^{-1}]_{11}$ of the full resolvent, and the remaining blocks
+$12$, $21$ and $22$ are $O(B^{-1})$ uniformly on small contours around those
+eigenvalues, so the full resolvent converges to
+$(h_3-z)^{-1}\oplus0$ there. Contour integration then gives convergence of the
+spectral projections, and residues give convergence of the two low eigenvalues and
+their local weights. No limit is taken in $L$.
+
+Because every summand of \eqref{eq:first} is nonnegative, retaining only $n=1$ and
+the two converging low-state pairs keeps a sum that converges to the right side of
+\eqref{eq:witnessgeneral}, which by \eqref{eq:constant} exceeds
+$U\Omega^2/(1200\tau^3)>U\Omega^2/(2400\tau^3)$. Hence there is a finite $B_0$ with
+\eqref{eq:torus} for all $B\ge B_0$. No explicit value or uniform estimate for $B_0$
+is claimed; the prefactor $1/2400$ only absorbs the loss in the embedding.
+\end{proof}
+
+\begin{corollary}
+\label{cor:scale}
+Under the hypotheses of Theorem~\ref{thm:torus}, the exact first local coefficient at
+the endpoint satisfies
+\begin{equation}
+a_{(0,0)}(W_B)\ \ge\ \frac{U}{2400\,C^3\,\Omega}
+\qquad\text{whenever}\qquad \tau=C\,\Omega,\quad C\ge1,\quad \Omega\le t/(4C).
+\label{eq:linear}
+\end{equation}
+In particular it diverges as $\Omega\downarrow0$ at every fixed $C$, while
+Lemma~\ref{lem:aux}(i) shows it is never larger than $U\Omega^2\beta^3/48$, so the
+witness attains the worst-case order to within a factor $50$.
+\end{corollary}
+
+\begin{proof}
+Substitute $\tau=C\Omega$ in \eqref{eq:torus}. The upper comparison is
+Lemma~\ref{lem:aux}(i) evaluated at the same parameters.
+\end{proof}
+
+\subsection{Exactly what is obstructed}
+
+\begin{remark}[Obstructed proof class]
+\label{rem:class}
+The three results above block the following explicitly described class of arguments:
+(a) condition on an arbitrary real static field $W$ and use the positive static
+free-fermion state of $H_W$ as reference; (b) expand the Gaussian-integrated
+nonzero-mode density interaction about that reference, without absorbing or
+resumming its connected contributions into a new reference; and (c) require a
+uniform absolute local activity, tending to zero at $\tau=C\Omega$, which dominates
+the exact local first coefficient \eqref{eq:first} or its per-volume sum. Item (c)
+fails, and it fails at fixed bare hopping and at a torus side $L=4$ already, so the
+obstruction is not a large-volume or large-$t$ artefact.
+\end{remark}
+
+\begin{remark}[What the class argument does not establish]
+\label{rem:notclass}
+A large first coefficient does not prevent a Taylor or cluster series from
+converging, and a large source-free cumulant does not obstruct a source-connected
+estimate: resummation can absorb connected contributions into a new reference. The
+witness therefore does not prove that every conditional expansion fails. It also does
+not obstruct the annealed route, in which the dynamic Gaussian is weighted by the
+full Gibbs factor: the field profile of \eqref{eq:fields3} has a middle field
+$t^2/(2\tau)-2\tau$ growing like $\tau^{-1}$ at fixed $t$, which is strongly
+suppressed under any Gaussian static prior. Finally, no statement is made about
+$\Tpair$ itself. The same caveats hold for the comparison with the earlier
+two-thirds-power analysis \cite{linear4,linear5}: the dimensionless cubic scale
+$U\Omega^2/\tau^3$ was already visible there, and what is new here is the fixed-hopping
+witness that attains it after exact Hartree cancellation and full Matsubara
+integration, without a determinant zero and without an atomic reference.
+\end{remark}
+
+\section{Obstruction from positive Fermion determinants}
+\label{sec:det}
+
+A natural way to control the linear scale is to bound, history by history, the
+normalised single-particle propagator that multiplies each phonon configuration, and
+then to use the positivity of the determinant for the spinful problem to keep the
+weights positive. This section shows that positivity and a strict lower bound on the
+determinant are together insufficient.
+
+\subsection{The oscillator sum rule, as a classical lemma}
+
+The following standard sum rule is quoted as a lemma because it delimits what a
+second-moment argument can do. It is the oscillator $f$-sum rule in imaginary
+frequency, and it holds unchanged in the interacting problem because the electronic
+operators commute with the oscillator coordinate.
+
+\begin{lemma}[Interacting nonzero-Matsubara sum rule]
+\label{lem:fsum}
+Let $x$ be any site of \eqref{eq:H} with force-scaled displacement
+$\psi_x=F_xX_x$, and let
+$C_x(i\nu_k)=\int_0^\beta e^{i\nu_ku}\langle\psi_x(u)\psi_x(0)\rangle du$ be taken in
+the exact interacting Gibbs state. Then for every $k\ne0$
+\begin{equation}
+0\le C_x(i\nu_k)\le\frac{U_x\Omega_x^2}{\nu_k^2}.
+\label{eq:fsum}
+\end{equation}
+In a translation-invariant thermal path representation with normalised Fourier
+coefficients $\psi_{x,k}=\beta^{-1}\int_0^\beta\psi_x(u)e^{-i\nu_ku}du$,
+\begin{equation}
+\E|\psi_{x,k}|^2\le\frac{U_x\Omega_x^2}{4\pi^2k^2\tau},\qquad
+\sum_{k\ge1}\E|\psi_{x,k}|^2\le\frac{U_x\Omega_x^2}{24\,\tau},
+\label{eq:fsum2}
+\end{equation}
+and the constant is $1/12$ when both signs of $k$ are summed.
+\end{lemma}
+
+\begin{proof}
+The oscillator coordinate commutes with the electronic operators and the other
+oscillators, so \eqref{eq:dcomm} gives $[H_\Lambda,\psi_x]=-iF_xP_x/M_x$ and
+$[\psi_x,[H_\Lambda,\psi_x]]=U_x\Omega_x^2$; the opposite order of the double
+commutator has the opposite sign. Let $E_a$ enumerate the exact energies with weights
+$p_a=e^{-\beta E_a}/Z$. At nonzero $\nu$ the Lehmann expansion gives
+\begin{equation}
+C_x(i\nu)=\sum_{a,b}\frac{(p_a-p_b)(E_b-E_a)}{(E_b-E_a)^2+\nu^2}
+\bigl|(\psi_x)_{ab}\bigr|^2 .
+\label{eq:lehmann}
+\end{equation}
+Degenerate pairs contribute zero at nonzero $\nu$ and the imaginary parts cancel
+between $(a,b)$ and $(b,a)$, so every numerator is nonnegative, and
+$\sum_{a,b}(p_a-p_b)(E_b-E_a)|(\psi_x)_{ab}|^2
+=\langle[\psi_x,[H_\Lambda,\psi_x]]\rangle=U_x\Omega_x^2$. Replacing each denominator
+by $\nu^2$ proves \eqref{eq:fsum}. Then
+$\E|\psi_{x,k}|^2=C_x(i\nu_k)/\beta$ in a translation-invariant path measure, and
+$\sum_{k\ge1}k^{-2}=\pi^2/6$ gives \eqref{eq:fsum2}. The unbounded oscillator needs no
+Fock cutoff. The linear coordinate coupling is relatively form bounded with
+arbitrarily small relative bound against the harmonic potential, so
+$D(H_\Lambda^{1/2})=D(N_{\mathrm{osc}}^{1/2})$ and $\psi_x|\psi_a\rangle\in
+D(H_\Lambda^{1/2})$ for every eigenvector $|\psi_a\rangle$ of $H_\Lambda$. Parseval
+then gives
+$\langle\psi_a|[\psi_x,[H_\Lambda,\psi_x]]|\psi_a\rangle
+=2\sum_b(E_b-E_a)|(\psi_x)_{ab}|^2$ by monotone convergence of the nonnegative
+summands, so the double-commutator value $U_x\Omega_x^2$ used above is finite and
+exact.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:fsum} rules out one specific claim, namely that an electronic
+determinant tilt must destroy every nonzero-frequency second-moment bound: the exact
+interacting bound has the same high-frequency coefficient as a free oscillator. It
+supplies nothing else. It gives no control of the zero mode $k=0$, no Gaussian
+concentration, no independence between sites or frequencies, no exponential moment
+and no joint rare-event bound. A root-mean-square scale of order
+$\sqrt{U_x\Omega_x^2/\tau}$ is not a norm bound on every history, and replacing such a
+moment by a uniform bound is exactly the invalid step that
+Theorem~\ref{thm:amp} isolates.
+\end{remark}
+
+\subsection{Positive determinant, unbounded propagator}
+
+\begin{theorem}[Arbitrary conditional amplification]
+\label{thm:amp}
+Consider one electronic level coupled to one bath orbital with one-particle matrix
+\begin{equation}
+h(u)=\begin{pmatrix}\varepsilon(u)&-v\\ -v&0\end{pmatrix},\qquad v>0,\qquad
+\varepsilon(u)=\begin{cases}-B,&0<u<1,\\ +B,&1<u<2,\end{cases}
+\label{eq:impurity}
+\end{equation}
+at $\beta=2$ and $B>0$. Let $U_1=e^{-h_1}$ and $U_2=e^{-h_2}$ be the propagators of
+the two slices, $U=U_2U_1$ the monodromy, and
+\begin{equation}
+\Ggreen(1,0)=-U_1\left(1+U_2U_1\right)^{-1}
+=-\left(U_1^{-1}+U_2\right)^{-1}
+\label{eq:Gdef}
+\end{equation}
+the antiperiodic two-point Green matrix at the slice boundary. Then
+$\det(1+U)>1$, every eigenvalue of $U$ is positive, and
+\begin{equation}
+\bigl|\Ggreen(1,0)_{00}\bigr|\longrightarrow\infty\quad(B\to\infty),\qquad
+\bigl|\Ggreen(1,0)_{00}\bigr|\sim\frac{B^2}{2v^2}\quad(B\to\infty).
+\label{eq:amp}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Both $U_1$ and $U_2$ are symmetric and positive definite. Their product is similar to
+the symmetric positive-definite matrix $U_1^{1/2}U_2U_1^{1/2}$, so all eigenvalues
+$\lambda_j$ of $U$ are positive, and
+$\det U=e^{-\Tr h_1-\Tr h_2}=1$ because the two slices carry opposite level shifts
+and the bath level is zero. Hence $\det(1+U)=\prod_j(1+\lambda_j)>1$.
+
+Set $d=\sqrt{B^2/4+v^2}$, $a=B/(2d)$, $c=\cosh d$, $s=\sinh d$. The two off-diagonal
+entries cancel in $U_1^{-1}+U_2$, giving
+$U_1^{-1}+U_2=2e^{-B/2}\diag(c-as,\,c+as)$ with both diagonal entries positive
+because $0<a<1$. Therefore
+\begin{equation}
+\bigl|\Ggreen(1,0)_{00}\bigr|
+=\frac{e^{B/2}}{(1-a)e^{d}+(1+a)e^{-d}}
+=\frac{1}{(1-a)e^{d-B/2}+(1+a)e^{-d-B/2}} .
+\label{eq:Gclosed}
+\end{equation}
+Since $d\ge B/2$ and $d+B/2\ge B$ we have $d(d+B/2)\ge B^2/2$, hence
+$1-a=v^2/[d(d+B/2)]\le2v^2/B^2$, and since
+$d-B/2=v^2/(d+B/2)\le v^2/B$ and $1+a\le2$,
+\begin{equation}
+\bigl|\Ggreen(1,0)_{00}\bigr|\ \ge\
+\frac{1}{(2v^2/B^2)\,e^{v^2/B}+2e^{-B}},
+\label{eq:Glower}
+\end{equation}
+whose denominator tends to zero as $B\to\infty$. This proves divergence without any
+floating-point asymptotic fit. For the rate, expand
+$d-B/2=v^2/B+O(B^{-3})$ and $1-a=2v^2/B^2+O(B^{-4})$ in \eqref{eq:Gclosed}.
+\end{proof}
+
+\begin{remark}[Smooth and finite-action histories]
+\label{rem:smooth}
+The step profile of \eqref{eq:impurity} is not a finite-action harmonic-oscillator
+path. This does not weaken the obstruction. Approximate the step in $L^1$ by smooth
+periodic histories, closing the transitions near $u=0,1,2$; the finite-dimensional
+evolution depends continuously on the history through its integral equation and
+Gronwall's inequality, and the determinant and the Green matrix are continuous
+wherever $\det(1+U)\ne0$. The strict determinant and amplification inequalities
+therefore persist for all sufficiently close smooth histories, and for each of them
+the oscillator action $\int[(\varepsilon')^2/\Omega^2+\varepsilon^2]/(2U)$ is finite for every
+$U,\Omega>0$, though possibly large. No lower bound on the probability of those
+histories and no divergence of an averaged propagator is asserted: a
+determinant-weighted integral may suppress them. What is obstructed is a uniform
+pathwise bound obtained from determinant positivity alone, not an annealed estimate
+that retains the weights.
+\end{remark}
+
+\begin{corollary}[Interval-certified two-slice fixture]
+\label{cor:fixture}
+At $B=6$ and $v=1/2$ in \eqref{eq:impurity},
+\begin{equation}
+\det(1+U)>15,\qquad \bigl|\Ggreen(1,0)_{00}\bigr|>52.89,
+\qquad \bigl|\Ggreen(1,0)_{00}\bigr|=52.8957540935\ldots
+\label{eq:fixture}
+\end{equation}
+The numbers were obtained from the exact closed form \eqref{eq:Gclosed} in
+outward-rounded interval arithmetic, evaluated with two independently written
+implementations and unlike precisions, so each enclosure provably contains the true
+value. They are calculated interval fixtures, not measured data. The fixture alone
+rejects the proposed uniform bound $|\Ggreen(1,0)_{00}|\le1$; the asymptotic theorem
+is analytical and is not established by the fixture.
+\end{corollary}
+
+\subsection{Supporting algebra: Ward identities, and two dimer facts}
+
+\begin{remark}[Finite-matrix Ward and Schur algebra]
+\label{rem:ward}
+Split a finite Matsubara matrix into positive and negative frequency blocks as
+$A=\begin{pmatrix}R_++iD_+&-V\\ -V^*&R_- -iD_-\end{pmatrix}$ with
+$R_\pm=R_\pm^*$, $D_\pm>0$ and $G=A^{-1}$. Each diagonal block is invertible and
+\begin{equation}
+\bigl\|D_\pm^{1/2}A_\pm^{-1}D_\pm^{1/2}\bigr\|\le1,
+\label{eq:ward1}
+\end{equation}
+because the normalised block is $H\pm i$ with $H$ Hermitian and its inverse singular
+values are $1/\sqrt{1+\lambda(H)^2}$. With
+$Q=VA_-^{-1}D_-(A_-^{-1})^*V^*$ one has $0\le Q\le VD_-^{-1}V^*=:\tilde Q$, and Schur
+complementation together with $\operatorname{Im}(S^{-1})=-S^{-1}(\operatorname{Im}S)
+(S^{-1})^*$ gives
+\begin{equation}
+G_{+-}D_-G_{+-}^*=G_{++}QG_{++}^*,\qquad
+-\operatorname{Im}G_{++}=G_{++}(D_+-Q)G_{++}^* .
+\label{eq:ward2}
+\end{equation}
+If $\alpha=\|D_+^{-1/2}VD_-^{-1/2}\|^2<1$ then $Q\le\alpha D_+$ and
+\begin{equation}
+\left(G_{+-}D_-G_{+-}^*\right)_{nn}\le\frac{\alpha}{1-\alpha}
+\left(-\operatorname{Im}G_{++}\right)_{nn},
+\label{eq:ward3}
+\end{equation}
+and the threshold $\alpha=1$ is sharp for positive dissipation in this abstract
+algebra, since scalar blocks $R_\pm=0$, $|V|^2=\alpha D_+D_-$ give $Q=\alpha D_+$.
+For diagonal $D_\pm=\diag(D_{\pm,m})$ the row sums satisfy exactly
+\begin{equation}
+\sum_m|(G_{++})_{nm}|^2D_{+,m}+\sum_m|(G_{+-})_{nm}|^2D_{-,m}
+=-\operatorname{Im}G_{nn}+2\sum_m|(G_{+-})_{nm}|^2D_{-,m},
+\label{eq:ward4}
+\end{equation}
+where the factor two is not optional. These are finite-matrix identities under the
+stated hypotheses; passing to an infinite Matsubara operator requires convergence and
+domain control that the identities do not supply, and \eqref{eq:ward3} cannot be
+averaged by replacing $\alpha$ with $\E\alpha$, since histories with $\alpha\ge1$ are
+not excluded by a second moment and $\alpha$, $G$ and the determinant weight are
+correlated. The unconditional sum rule of Lemma~\ref{lem:fsum} does give the
+finite-grid moment estimate
+$\E\alpha\le U\Omega^2(4\pi^4\tau^3)^{-1}S$ with
+$S=\sum_{k\ge1}H_{\mathrm{odd}}(k)/k^3$ and
+$H_{\mathrm{odd}}(k)=\sum_{j=0}^{k-1}(2j+1)^{-1}\le1+\tfrac12\log(2k-1)$, hence
+$S\le C_{\mathrm{aux}}$ with $67/50<C_{\mathrm{aux}}<27/20$, an enclosure that is
+certified in outward-rounded rational arithmetic; the $\tau^{-3}$ scale
+reproduces a two-thirds-power small-moment scale and is not a linear temperature law.
+\end{remark}
+
+\begin{remark}[Two static dimer anchors]
+\label{rem:dimer}
+In the two-site spinful Holstein model at fixed total electron number $N$, with
+$a_\pm=(a_1\pm a_2)/\sqrt2$ and $G^2=U\Omega/2$ in the notation of \eqref{eq:U}, the
+centre-of-mass oscillator decouples exactly after a shift,
+\begin{equation}
+\Omega a_+^*a_+-\frac{GN}{\sqrt2}(a_++a_+^*)=\Omega c_+^*c_+-\frac{G^2N^2}{2\Omega},
+\qquad c_+=a_+-\frac{GN}{\sqrt2\,\Omega},
+\label{eq:com}
+\end{equation}
+while the unshifted centre-of-mass number does not generally commute with $H$. In the
+two-electron singlet sector at a frozen relative field $q$ the electronic matrix
+$h(q)$ has entries $-q$, $q$, $0$ on the diagonal and $-\sqrt2\,t$ in the off-diagonal
+pair, with elastic energy $q^2/(4U)$. The lower Born-Oppenheimer surface
+$q^2/(4U)-\sqrt{q^2+4t^2}$ has minima at $q=\pm2\sqrt{U^2-t^2}$ for $U>t>0$, and at
+either minimum the bare static pair expectation is
+\begin{equation}
+\langle\Delta_1^\dagger\Delta_2\rangle_{\mathrm{el}}=\frac{t^2}{4U^2}
+\qquad\left(\frac{1}{64}\ \text{at}\ U=4,\ t=1,\ \text{against}\ \frac{1}{68}
+\ \text{at the unrelaxed field}\ q=2U\right).
+\label{eq:dimermin}
+\end{equation}
+Virtual electronic admixture within one static well therefore already contributes a
+nonzero short-range bare pair correlator, which obstructs a Peierls argument that
+identifies every short-range bare pair correlator with a phonon-assisted inter-well
+tunnelling amplitude. It says nothing about long-distance order, and the static
+energy landscape is not a many-site dressed-coherence bound.
+\end{remark}
+
+\section{What survives: the case of vanishing effective attraction}
+\label{sec:survives}
+
+The obstructions above concern the attractive Holstein problem at fixed $U>0$ and the
+propagator machinery used to control it. There is one case in which a
+frequency-uniform ceiling is available: the pure bond-SSH model \eqref{eq:Hssh}, where
+the local attraction vanishes and the only coupling is the Peierls one. This closes
+the case $\Ueff=0$ that \cite{sshbond3} left open. All constants below are exact
+rationals certified by exact-rational and outward-rounded interval replay.
+
+\subsection{High-temperature clustering}
+
+Fix $L\ge4$, the bond relaxation energy $\Gb=g^2/K$, and
+\begin{equation}
+c_0=2^{-10},\qquad \xi_0=2^{-9}\beta^{-1},\qquad
+\varepsilon=\frac{2c_0}{1-c_0}=\frac{2}{1023},\qquad
+q_{\mathrm{GC}}=48\varepsilon=\frac{32}{341},
+\label{eq:constants}
+\end{equation}
+so that $q_{\mathrm{GC}}<1/10$, together with
+\begin{equation}
+A_{\mathrm{GC}}=\frac{3}{1-q_{\mathrm{GC}}}=\frac{341}{103},\qquad
+b_{\mathrm{GC}}=\frac{3q_{\mathrm{GC}}}{1-q_{\mathrm{GC}}}=\frac{32}{103},\qquad
+R_{\max}=1+\frac{4A_{\mathrm{GC}}\,q_{\mathrm{GC}}}{(1-q_{\mathrm{GC}})^2}
+=\frac{24718511}{9834543}<3 .
+\label{eq:constants2}
+\end{equation}
+The source-augmented graph of \eqref{eq:Hssh} adds $|\Lambda_L|$ source edges
+$e'_x=(x,x+r)$ to the physical bonds, raising the maximum vertex degree from $4$ to
+$6$, with source vertex operator
+$Y_{e'}(\theta)=e^{i\theta}\Delta_x^\dagger\Delta_{x+r}+e^{-i\theta}
+\Delta_{x+r}^\dagger\Delta_x$ of operator norm $1$ and spectrum $\{-1,0,1\}$.
+
+\begin{theorem}[Frequency- and $\mu$-uniform pair clustering]
+\label{thm:gc}
+For every $L\ge4$, every real $t$ and $g$, every $K>0$, every $M>0$, every
+$\mu\in\R$, and every $\beta>0$ with
+$\beta|t|+\beta\Gb\le2^{-10}$, the equal-time on-site pair correlator satisfies
+\begin{equation}
+\left|\langle\Delta_x^\dagger\Delta_y\rangle_{\Lambda_L}\right|
+\le A_{\mathrm{GC}}\,q_{\mathrm{GC}}^{d(x,y)}
+=\frac{341}{103}\left(\frac{32}{341}\right)^{d(x,y)}
+\label{eq:gcb}
+\end{equation}
+for all distinct $x,y\in\Lambda_L$, and
+\begin{equation}
+\sup_{x\in\Lambda_L}\sum_{y\in\Lambda_L}
+\left|\langle\Delta_x^\dagger\Delta_y\rangle_{\Lambda_L}\right|
+\le R_{\max}=\frac{24718511}{9834543}<3 .
+\label{eq:rmax}
+\end{equation}
+Moreover, for every fixed nonzero $r$, the density
+$p_{\Lambda_L}(\xi)=|\Lambda_L|^{-1}\log Z_{\Lambda_L}(\xi)$ of the
+source-augmented model extends to a zero-free analytic function of $\xi$ on
+$|\xi|<\xi_0$, and for real $\xi\in[0,\xi_0/2]$ obeys
+\begin{equation}
+p_{\Lambda_L}(\xi)-p_{\Lambda_L}(0)\le
+2\beta A_{\mathrm{GC}}\,q_{\mathrm{GC}}^{d(0,r)}\xi+\frac{4\xi^2}{\xi_0^2}.
+\label{eq:source}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof summary]
+Five exact steps, each with a certified constant.
+\emph{(1) Analyticity and polymer factorisation.} For complex $\xi$ the semigroup
+$-H_\Lambda(\xi)$ is norm analytic and the Dyson series is trace-norm summable, since
+the phonon trace factors supply a factor
+$(2\sinh(\beta\Omega/4(N+1)))^{-|\mathcal{E}_\Lambda|}$ that grows only polynomially
+in the order $N$. Each insertion operator, $T_b$, $Y_{e'}$ and
+$\Delta_x^\dagger\Delta_y$, is even in fermions, so operators on vertex-disjoint
+supports commute identically and the normalised partition function factorises into a
+sum over vertex-disjoint connected polymers $E$.
+\emph{(2) Activity bound without an atomic gap.} Summing the multiplicities on a
+connected polymer, bounding the electronic trace by the multilinear Schatten-H\"older
+inequality, which cancels the single-site weight $z_0^{|S_E|}$ exactly, and evaluating
+the exact positive Gaussian Wick contractions of the bond oscillators, each pair of
+which contributes the frequency-uniform integral
+$\int_0^\beta\int_0^\beta C_\beta(|u-v|)\,du\,dv=\beta/K$ with $C_\beta$ the thermal
+position covariance of one oscillator, gives
+\begin{equation}
+|w(E)|\le\left(e^{2\beta|t|+2\beta\Gb}-1\right)^{|E_{\mathrm{phys}}|}
+\left(e^{\beta|\xi|}-1\right)^{|E_{\mathrm{src}}|},\qquad
+|w_{xy}(E)|\le\left(e^{2\beta|t|+2\beta\Gb}-1\right)^{|E|},
+\label{eq:activity}
+\end{equation}
+and $e^x-1\le x/(1-x/2)$ for $x\in[0,2)$ turns the two exponents into the common
+bound $\varepsilon=2/1023$, using $2\beta|t|+2\beta\Gb\le2^{-9}$ and
+$\beta|\xi|\le2^{-9}$.
+\emph{(3) Graph counting.} A depth-first traversal rooted at any vertex shows that a
+degree-$D$ graph has at most $D^{2k}$ connected edge sets of size $k$ containing a
+given vertex, and connectivity gives $|S_E|\le k+1$. With $D=4$ the Kotecký-Preiss
+sum is then at most $3\sum_{k\ge1}(48\varepsilon)^k=3q_{\mathrm{GC}}/(1-q_{\mathrm{GC}})
+=b_{\mathrm{GC}}<1$, which is the origin of the factor $48$.
+\emph{(4) Support deletion and the source derivative.} The Kotecký-Preiss criterion
+gives $|\widetilde Z_{\Lambda_L\setminus S}/\widetilde Z_{\Lambda_L}|\le e^{|S|}$,
+so the marked polymer sum is bounded by $A_{\mathrm{GC}}q_{\mathrm{GC}}^d$ because any
+connected polymer connecting $x$ and $y$ has at least $d(x,y)$ edges. The distance
+shell of a torus holds at most $4d$ sites, which gives \eqref{eq:rmax}. For the
+source, the degree rises to $6$ and the criterion holds with
+$q_{\mathrm{src}}=108\varepsilon=72/341$ and $b_{\mathrm{src}}=216/269<1$; since
+translation invariance gives
+$p'(0)=2\beta\operatorname{Re}(e^{i\theta}\langle\Delta_0^\dagger\Delta_r\rangle)$, and Cauchy's
+formula on $|\xi|=\xi_0$ bounds the remainder of order at least two by
+$4\xi^2/\xi_0^2$, \eqref{eq:source} follows.
+\emph{(5) Certification.} Every rational constant in \eqref{eq:constants} and
+\eqref{eq:constants2} and the integer polynomial identities of
+Theorem~\ref{thm:routes}(i) were replayed in exact rational arithmetic and, where an enclosure is
+needed, in outward-rounded interval arithmetic.
+\end{proof}
+
+\begin{lemma}[Boundary spring-constant bracket]
+\label{lem:canon}
+Let $b\ge2$, cut $\Lambda_L$ into rectangular blocks $B_\alpha$ of side lengths in
+$[b,2b-1]$, let $\partial$ be the set of physical bonds with endpoints in different
+blocks and $\partial_{\mathrm{src}}$ the set of source edges with endpoints in
+different blocks, and for $K'>0$ define the block-decoupled operator
+\[
+H_{\mathrm{blk}}(\xi;K')=\sum_\alpha H_{B_\alpha}(\xi)
++\sum_{b\in\partial}\Bigl(\frac{P_b^2}{2M}+\frac{K'}{2}X_b^2\Bigr),
+\]
+where $H_{B_\alpha}(\xi)$ keeps only the vertices, physical bonds and source edges
+internal to $B_\alpha$. Then for every real $\xi$, in the full trace and in every
+fixed total-number and fixed spin-number sector,
+\begin{equation}
+\bigl|\log Z_{\Lambda_L}(\xi)-\log Z_{\mathrm{blk}}(\xi;K)\bigr|
+\le C_{\mathrm{bdry}}|\partial|+\beta|\xi|\,|\partial_{\mathrm{src}}|,
+\label{eq:bdry}
+\end{equation}
+with
+$C_{\mathrm{bdry}}=\beta\bigl(2|t|+4\Gb\bigr)
++\max\bigl\{\log\frac{Z_{\mathrm{ph}}(K/2)}{Z_{\mathrm{ph}}(K)},
+\log\frac{Z_{\mathrm{ph}}(K)}{Z_{\mathrm{ph}}(2K)}\bigr\}$ and
+$Z_{\mathrm{ph}}(K')=(2\sinh(\beta\sqrt{K'/M}/2))^{-1}$.
+\end{lemma}
+\begin{proof}
+On a bond $b=\{x,y\}$ the operator $T_b$ is the sum of two spin terms, each of
+operator norm $1$ acting on orthogonal spin sectors, and $X_b$ is a phonon operator on
+a separate tensor factor, so $\|T_b\|_{\mathrm{op}}=2$ and $[X_b,T_b]=0$. Young's
+inequality $2|g||X_b|\le KX_b^2/4+4g^2/K$ then gives, as quadratic forms,
+\[
+-\Bigl(2|t|+\frac{4g^2}{K}\Bigr)I-\frac{K}{4}X_b^2
+\le(-t+gX_b)T_b\le
+\Bigl(2|t|+\frac{4g^2}{K}\Bigr)I+\frac{K}{4}X_b^2 .
+\]
+Adding the boundary oscillator potential $\frac{K}{2}X_b^2$ to both sides gives
+$\frac{K}{2}X_b^2-\frac{K}{4}X_b^2=\frac{K/2}{2}X_b^2$ from below and
+$\frac{K}{2}X_b^2+\frac{K}{4}X_b^2\le\frac{2K}{2}X_b^2$ from above, while a crossing
+source edge contributes $\pm\xi Y_{e'}(\theta)$ with $\|Y_{e'}(\theta)\|_{\mathrm{op}}=1$.
+Summing over the crossing bonds yields the two-sided operator inequality
+\[
+H_{\mathrm{blk}}(\xi;K/2)-|\partial|\Bigl(2|t|+\frac{4g^2}{K}\Bigr)-|\xi||\partial_{\mathrm{src}}|
+\le H_{\Lambda_L}(\xi)\le
+H_{\mathrm{blk}}(\xi;2K)+|\partial|\Bigl(2|t|+\frac{4g^2}{K}\Bigr)+|\xi||\partial_{\mathrm{src}}|
+\]
+on the form domain. Every operator here is self-adjoint with compact resolvent in each
+sector, so min-max monotonicity of eigenvalues bounds the two traces by
+$E=\beta|\partial|(2|t|+4\Gb)+\beta|\xi||\partial_{\mathrm{src}}|$. The boundary
+oscillators act on tensor factors decoupled from all blocks and commute with the
+number operators, so their partition functions factor out identically in every sector,
+$\log Z_{\mathrm{blk}}(\xi;K/2)-\log Z_{\mathrm{blk}}(\xi;K)
+=|\partial|\log[Z_{\mathrm{ph}}(K/2)/Z_{\mathrm{ph}}(K)]$ and likewise for $K$ to $2K$;
+inserting $\log Z_{\mathrm{blk}}(\xi;K)$ between the two bounds gives \eqref{eq:bdry}.
+\end{proof}
+
+\begin{theorem}[Thermodynamic canonical decay]
+\label{thm:canon}
+Under the same condition $\beta|t|+\beta\Gb\le2^{-10}$, let $L_j\to\infty$ and let
+$N_j/L_j^2\to n\in(0,2)$ (or balanced spin sectors with $N_{j\sigma}/L_j^2\to a\in(0,1)$).
+Then for every fixed $r\ne0$
+\begin{equation}
+\limsup_{j\to\infty}\left|\langle\Delta_0^\dagger\Delta_r\rangle_{L_j,\mathrm{can}}
+\right|\le A_{\mathrm{GC}}\,q_{\mathrm{GC}}^{\|r\|_1}.
+\label{eq:canon}
+\end{equation}
+Consequently the pair-decay temperature of the pure bond-SSH model obeys
+\begin{equation}
+k_B\Tpair\le1024\left(|t|+\Gb\right)
+\label{eq:tpair}
+\end{equation}
+uniformly in $\Omega>0$, in $\mu\in\R$, in the interior density $n\in(0,2)$, and in
+the torus side.
+\end{theorem}
+
+\begin{proof}[Proof summary]
+Write $\widehat Z$ for the partition function divided by the free-phonon factor. Cut
+$\Lambda_L$ into rectangular blocks of side $[b,2b-1]$ ($b\ge2$) and decouple the
+blocks by replacing each boundary spring constant $K$ of a physical bond crossing the
+blocks by $K/2$ from below and by $2K$ from above; Young's inequality
+$2|g||X_b|\le KX_b^2/4+4g^2/K$ and min-max eigenvalue monotonicity then bracket
+$\log Z_{\Lambda_L}(\xi)$ by the two decoupled values with boundary error at most
+$C_{\mathrm{bdry}}|\partial|+\beta|\xi||\partial_{\mathrm{src}}|$, where
+$C_{\mathrm{bdry}}=\beta(2|t|+4g^2/K)$ plus the logarithm of the ratio of single
+oscillator partition functions at the two spring constants, and
+$|\partial|\le4|\Lambda_L|/b$ (Lemma~\ref{lem:canon}). Distributing the $N$ particles
+among the blocks adds at most $O(b^{-2}\log b)|\Lambda_L|$, so
+$\log\widehat Z_{\Lambda_L,N}(0)$ is superadditive up to $O(b^{-1})|\Lambda_L|$ and the
+canonical free-energy density $f_{\mathrm{can}}$ is concave in $n$. Its supporting
+slope at an interior $n$ is $-\beta\mu$ for an admitted $\mu$, and the finite-volume
+Legendre discrepancy
+$\delta_L=L^{-2}(\log\widehat Z_{\Lambda_L}(0;\mu)-\log\widehat Z_{\Lambda_L,N}(0)
+-\beta\mu N)$ is nonnegative and tends to $0$. Since the Hamiltonian is linear in the
+real source $\xi$ and self-adjoint, $\xi\mapsto L^{-2}\log\widehat Z_{\Lambda_L,N}(\xi)$
+is convex, so its derivative at $\xi=0$ is bounded by the difference quotient, i.e.\ by
+$(p_{\Lambda_L}(\xi)-p_{\Lambda_L}(0))/\xi+\delta_L/\xi$ there; Theorem~\ref{thm:gc}
+holds uniformly in $\mu$, so taking $\limsup_{j\to\infty}$ at fixed $\xi$, then
+$\xi\downarrow0$, then optimising over the phase $\theta$ gives \eqref{eq:canon}.
+Inverting $\beta|t|+\beta\Gb\le2^{-10}$ gives \eqref{eq:tpair}.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:canon} is uniform in the frequency, but it is not a linear ceiling:
+the constant $1024(|t|+\Gb)$ does not vanish as $\Omega\downarrow0$, so it says
+nothing at the scale $\Tlin$. It closes the high-temperature regime of the
+$\Ueff=0$ case that the strong-coupling analyses leave open. The Holstein ceiling of
+\cite{stage6} and the attractive-Hubbard ceiling of \cite{sshbond3} both carry the rate
+$t^2/\Ueff$, which is infinite at $\Ueff=0$, whereas \eqref{eq:tpair} is finite there;
+at $t=0$ the threshold $2^{13}\Gb$ of \cite{sshbond3} becomes $2^{10}\Gb$ through
+Theorem~\ref{thm:gc}. Neither paper treats the pure Peierls case, so this is a new
+regime and not a sharper constant in theirs.
+\end{remark}
+
+\subsection{Three further routes obstructed at \texorpdfstring{$\Ueff=0$}{U\_eff = 0}}
+
+\begin{theorem}[Exact route obstructions]
+\label{thm:routes}
+The following three statements hold for the pure bond-SSH model.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{No phonon-induced instantaneous atomic gap.} Complete the square in each
+bond oscillator at $t=0$, $\mu=0$:
+$H_{\mathrm{ph},b}+gX_bT_b=\frac{P_b^2}{2M}+\frac{K}{2}(X_b+\frac{g}{K}T_b)^2
+-\frac{g^2}{2K}T_b^2$, so the antiadiabatic limit is
+$H^{\mathrm{inst}}_{\mathrm{eff}}=-\frac{g^2}{2K}\sum_bT_b^2$ exactly. On the
+four-site ring $C_4$ at half filling $N=4$ this operator conserves
+$(N_\uparrow,N_\downarrow)$ and every local parity $(-1)^{n_x}$, hence $N_{\mathrm{odd}}$.
+With $\Sigma_4=\sum_{b\in\mathcal{E}_{C_4}}T_b^2$, one has
+$\spec(\Sigma_4|_{N_{\mathrm{odd}}=0})=\{0,4,4,4,8,12\}$ and
+$\max\spec(\Sigma_4|_{N_{\mathrm{odd}}>0})=12$ as well, so
+$\min\spec(H^{\mathrm{inst}}_{\mathrm{eff}})_{N_{\mathrm{odd}}=0}=
+\min\spec(H^{\mathrm{inst}}_{\mathrm{eff}})_{N_{\mathrm{odd}}>0}=-6g^2/K$ and the
+phonon-induced gap
+$\Delta_{\mathrm{eff}}=0$.
+\item \emph{Non-terminating bond Lang-Firsov expansion.} For bonds
+$b=\{x,y\}$, $b'=\{y,z\}$ sharing the vertex $y$,
+\begin{equation}
+[T_b,T_{b'}]=\sum_{\sigma}\left(c_{x\sigma}^\dagger c_{z\sigma}
+-c_{z\sigma}^\dagger c_{x\sigma}\right)\ne0,\qquad
+\bigl\|[T_b,T_{b'}]\bigr\|_{\mathrm{op}}=2 .
+\label{eq:bondcomm}
+\end{equation}
+Under the bond generator $S=-i\frac{g}{K}\sum_bP_bT_b$,
+$\operatorname{ad}_S^k(H_\Lambda)$ contains degree-$k$ momentum products
+$(g/K)^kP_{b_1}\cdots P_{b_k}\operatorname{ad}_{T_{b_1}}\cdots
+\operatorname{ad}_{T_{b_{k-1}}}(T_{b_k})$ along contiguous bond walks for every
+$k\ge2$, whose thermal root-mean-square scale per factor is
+$|g|K^{-1}\langle P_b^2\rangle_{0,\beta}^{1/2}
+=\sqrt{g^2(2K\Omega)^{-1}\coth(\beta\Omega/2)}$, which diverges as $\Omega\downarrow0$
+at fixed $\beta,t,g,K$. At first order,
+$[S,V_t]=i(gt/K)\sum_{b,b'}P_b[T_b,T_{b'}]$ and
+$[S,V_g]=-\frac{g^2}{K}\sum_bT_b^2-i\frac{g^2}{K}\sum_{b\ne b'}P_bX_{b'}[T_b,T_{b'}]$.
+\item \emph{Hopping-uniform exponential clustering is impossible.} At $g=0$,
+$\mu=0$, $t>0$ and half filling, $\langle\Delta_0^\dagger\Delta_r\rangle=G(r)^2$ with
+$G$ the free-fermion correlator. Along the staircase ray $r_m=(m,m-1)$ of graph
+distance $d_m=2m-1$,
+\begin{equation}
+\lim_{\beta t\to\infty}\lim_{L\to\infty}G(r_m)
+=\frac{(-1)^{m-1}2}{\pi^2(2m-1)},\qquad
+\lim_{\beta t\to\infty}\lim_{L\to\infty}
+\langle\Delta_0^\dagger\Delta_{r_m}\rangle=\frac{4}{\pi^4d_m^2}.
+\label{eq:staircase}
+\end{equation}
+Hence for every $A>0$ and $q\in(0,1)$ there are $m$, $\beta t$ and $L\ge4$ with
+$|\langle\Delta_0^\dagger\Delta_{r_m}\rangle|>Aq^{d_m}$: no exponential clustering
+bound with hopping-independent constants can follow from a condition on $\beta\Gb$
+alone.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Completing the square is exact, and $T_b^2$ expands as
+$h_{b,\uparrow}^2+h_{b,\downarrow}^2+2h_{b,\uparrow}h_{b,\downarrow}$ with
+$h_{b,\sigma}^2=(n_{x\sigma}-n_{y\sigma})^2$ diagonal and the cross term transferring
+both spins at once, so $(-1)^{n_z}$ and hence $N_{\mathrm{odd}}=\sum_z(n_{z\uparrow}
+-n_{z\downarrow})^2$ are conserved. On the paired sector the six hard-core pair states
+give the integer matrix whose exact spectrum is $\{0,4,4,4,8,12\}$ with eigenvector
+$(1,2,1,1,2,1)^{\mathrm T}$ for the value $12$, certified by the integer polynomial
+identity $M(M-4)(M-8)(M-12)=0$. On the fully singly occupied sector
+$\frac14T_b^2=\frac12(1-P_{xy})=\frac14-2\mathbf S_x\cdot\mathbf S_y$, twice a singlet
+projector, and the four-site Heisenberg ring gives the same spectrum on the
+spin-balanced subspace, which is where the value $12$ is attained a second time. On
+the remaining invariant sectors the spectrum of $\Sigma_4$ is computed in exact
+integer arithmetic as well, and its maximum is strictly smaller: $10$ on the
+$24$-dimensional spin-balanced $\{N_{\mathrm{odd}}=2\}$ sector, $8$ on the two singly
+occupied $S_z=\pm1$ sectors of dimension $4$, $6$ on the two polarised
+$\{N_{\mathrm{odd}}=2\}$ sectors of dimension $12$, and $0$ on the two fully polarised
+sectors. The half-filled space has $\binom84=70$ states, and the verification covers
+all $70$: the spectrum is computed on nine individually invariant sectors, which pair
+into six classes under the global spin flip. Hence the maximum of $\Sigma_4$ equals
+$12$ on the unpaired sectors as well as on the paired sector.
+(ii) For each spin species, canonical anticommutation gives
+$[h_{b,\sigma},h_{b',\sigma}]=c_{x\sigma}^\dagger c_{z\sigma}-c_{z\sigma}^\dagger
+c_{x\sigma}$, and the two spin species commute, so the square of $i$ times the
+commutator is $(n_{x\sigma}-n_{z\sigma})^2$ of norm one per spin and the operator norm
+is $2$. Because $[P_b,P_{b'}]$ vanishes and $[P_b,X_{b'}]=-i\delta_{bb'}$, each
+application of $\operatorname{ad}_S$ appends one momentum factor and one nested commutator
+of hopping operators, which is a nonvanishing end-to-end current of norm $2$ along any
+path of distinct bonds; no finite order terminates the series. The single-oscillator
+moment is $\langle P_b^2\rangle_{0,\beta}=\frac{K}{2\Omega}\coth(\beta\Omega/2)$.
+(iii) At $g=0$ the two spin species are independent, so the singlet-pair correlator
+factors into a square of the single-particle correlator, and Fourier inversion gives
+$G_{\Lambda_L,\beta}(r)$ as the stated lattice sum. Taking $L\to\infty$ turns the sum
+into a Riemann integral, and $\beta t\to\infty$ restricts it to the Fermi sea
+$\{\cos k_x+\cos k_y>0\}$ by dominated convergence because the Fermi surface has
+measure zero. In rotated coordinates $u=(k_x+k_y)/2$, $v=(k_x-k_y)/2$ the sea is the
+diamond $|u|<\pi/2$, $|v|<\pi/2$ up to a Jacobian $2$, and the two separated integrals
+give \eqref{eq:staircase}. Since $\pi^{-4}d^{-2}$ dominates $Aq^{d}$ for any $q<1$ at
+large $d$, the negative statement follows. As an outward-rounded rational check, at
+$m=2$ one has $4/(9\pi^4)\approx4.5627\times10^{-3}>A_{\mathrm{GC}}q_{\mathrm{GC}}^3
+\approx2.7359\times10^{-3}$.
+\end{proof}
+
+\begin{remark}
+Item (i) says that the antiadiabatic bond model has no instantaneous two-body operator
+separating paired from unpaired sectors on the smallest allowed torus, so an argument
+that first takes $\Omega\to\infty$ and then uses an atomic gap cannot be correct.
+Item (ii) says that a bond Lang-Firsov transformation is not a finite-order device for
+Peierls coupling, in contrast with the site coupling of \eqref{eq:H} where the
+transformation acts diagonally. Item (iii) is a statement about what a condition on
+$\beta\Gb$ alone can imply: the algebraic free-fermion tail is invisible to the
+one-scale polymer estimate when the hopping is large, which is why
+Theorem~\ref{thm:gc} requires the combined condition
+$\beta|t|+\beta\Gb\le2^{-10}$ rather than a condition on $\beta\Gb$ alone.
+\end{remark}
+
+\section{What is not claimed}
+\label{sec:notclaimed}
+
+The results of this note are model statements at the level of partition functions,
+correlators and Hamiltonians. They are not measurements, not predictions for a
+material, and not claims about a measured critical or ordering temperature. In
+particular:
+
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item No upper bound on $\Tpair$ for the attractive Holstein model, or for any model
+with $\Ueff>0$, is improved anywhere in this note, and no ceiling at the scale
+$\Tlin=C(t,U)\Omega$ is proved or disproved. The single exception is the
+$\Ueff=0$ bond-SSH case, where Theorem~\ref{thm:canon} replaces the divergent
+$t^2/\Ueff$ rate of \cite{sshbond3} by a finite bound. The obstructions are statements
+about specified classes of arguments, as spelled out in
+Remarks~\ref{rem:class}, \ref{rem:notclass} and \ref{rem:smooth}.
+\item Theorems~\ref{thm:witness} and~\ref{thm:torus} concern a conditional coefficient,
+not the Gibbs state. They do not show that the conditional pair correlations of the
+witness field are large, and they do not show that such a field has appreciable weight
+under any static or annealed measure.
+\item Theorem~\ref{thm:amp} and Corollary~\ref{cor:fixture} concern a single-impurity
+Green function along one history. They do not imply a divergent averaged propagator,
+and they are not evidence that the impurity description is inappropriate for the
+Holstein model.
+\item Theorems~\ref{thm:gc}, \ref{thm:canon} and \ref{thm:routes} concern the pure
+bond-SSH model with $\Ueff=0$ on square tori of side at least four. They do not
+transfer to $\Ueff>0$, they say nothing at temperatures below $1024(|t|+\Gb)$, and
+they are improvements only at $\Ueff=0$: the finite bound \eqref{eq:tpair} holds where
+the rate $t^2/\Ueff$ of \cite{sshbond3} diverges, and at $t=0$ it lowers that paper's
+threshold $2^{13}\Gb$ to $2^{10}\Gb$, which is a statement about the high-temperature
+regime and not about the linear scale. They say nothing about the low-temperature
+two-dimensional regime where pair correlations would be algebraic rather than
+exponential.
+\end{enumerate}
+
+\section{Open problems}
+\label{sec:open}
+
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em]
+\item \emph{The linear step.} Prove or refute
+$k_B\Tpair\le C(t,U)\Omega$ at fixed $t,U$ and regular density as
+$\Omega\downarrow0$. The obstructions here remove three specific mechanisms. What
+remains open after them is a source-connected resummation that absorbs the connected
+dynamic cumulant of Theorem~\ref{thm:witness} into a new reference, together with the
+static estimate that controls how often near-Fermi resonant fields occur with
+appreciable weight.
+\item \emph{The annealed route.} Establish a volume-uniform bound on
+$\E[\det(1+U_v)^2\mathcal{W}_v]/\E[\det(1+U_v)^2]$ for the relevant Wick minors or
+polymer activities near non-separated clusters. Theorem~\ref{thm:amp} shows that the
+numerator cannot be estimated history by history; adjugate minors remain bounded in
+each finite dimension, and whether that structure is enough is open.
+\item \emph{The Ward route.} Lemma~\ref{lem:fsum} and the identities of
+Remark~\ref{rem:ward} are finite-matrix statements. To reach a ceiling one would need
+the infinite-Matsubara limit of those identities, the identification of the exact
+singlet kernel with the nonnegative expression of
+Remark~\ref{rem:ward}, an averaged leakage estimate that does not replace $\alpha$ by
+$\E\alpha$, and an operator-norm or weighted-resolvent version of a diagonal estimate.
+None of these is available.
+\item \emph{Dimer and Born-Oppenheimer extensions.} Extend the exact static landscape
+of Remark~\ref{rem:dimer} to a volume-uniform quantum free-energy or coherence bound
+with a controlled Born-Oppenheimer error expansion in $\Omega/t$. A finite dimer has no
+pair-order transition, and a crossover defined from a single observable cannot be
+relabelled $\Tpair$.
+\item \emph{Reflection and infrared arguments.} The free optical covariance carries no
+momentum-dependent stiffness, and ordinary spatial reflection positivity fails in
+balanced canonical Holstein sectors; grand-canonical or particle-hole modified
+reflections would need their own proof. A free Debye-Waller average cannot be factored
+out of an interacting Lang-Firsov trace.
+\item \emph{The $\Ueff=0$ model below the high-temperature regime.} Theorems
+\ref{thm:gc} and~\ref{thm:canon} stop at $\beta|t|+\beta\Gb=2^{-10}$. Theorem~\ref{thm:routes}(iii) and the exact identities of
+Theorem~\ref{thm:routes}(i) together show that the remaining regime is not a matter of
+constants:
+any estimate there must be joint in $\beta t$ and $\beta\Gb$, and it must recover
+algebraic tails at large hopping.
+\end{enumerate}
+
+\section*{Acknowledgments and disclosures}
+
+AI agents generated the proofs, code and drafts under D. Rens' direction, and
+separate AI agents carried out the independent reviews.
+
+This preprint has not been peer reviewed.
+
+\section*{Data availability}
+
+Every constant quoted in this note is reproduced by a replay suite that accompanies
+this preprint: exact rational arithmetic for all rational comparisons and polynomial
+identities, outward-rounded interval arithmetic for enclosures, and a separately
+written independent implementation for each certificate, together with the
+fixed-parameter fixtures of Corollary~\ref{cor:fixture} and the finite-matrix
+diagnostics of the Remarks above. The finite-matrix and floating-point records
+are numerical sanity checks and are labelled as such; they are not part of any proof.
+The suite is deposited as the replay supplement of this preprint, \DOI{\SUPPDOI},
+together with its source records at \url{\REPOURL}; this preprint is archived under
+\DOI{\PAPERDOI}. No external data set is used anywhere in this work.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}
