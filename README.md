@@ -1,4 +1,5 @@
 # Method obstructions to linear-in-frequency pairing ceilings in electron-phonon models
+Research record: [Method obstructions to linear-in-frequency pairing ceilings in electron-phonon models](https://supermatics.io/research/linear-pairing-ceiling-obstructions).
 
 Davis Rens  
 SuperMatics Inc.  

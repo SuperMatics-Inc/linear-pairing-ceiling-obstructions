@@ -10,6 +10,7 @@ authors:
     affiliation: SuperMatics Inc.
     orcid: 'https://orcid.org/0000-0001-5839-5197'
 doi: 10.5281/zenodo.24410349
+url: https://supermatics.io/research/linear-pairing-ceiling-obstructions
 repository-code: 'https://github.com/SuperMatics-Inc/linear-pairing-ceiling-obstructions'
 preferred-citation:
   type: article
